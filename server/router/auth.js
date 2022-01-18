@@ -8,9 +8,34 @@ require('../db/conn');
 const User = require('../models/userSchema');
 
 //get users
-router.get('/getUsers', authenticate, async (req, res) => {
+// router.get('/getUsers', authenticate, async (req, res) => {
+//     try {
+//         const users = await User.find()
+//         res.send((users));
+//     }
+//     catch (err) {
+//         console.log("error: ", err)
+//         res.send("error" + err);
+//     }
+// });
+
+
+////////////////////////////// sort user ///////////////////////
+router.get("/dashboard/getUserBy/:sortBy", authenticate, async (req, res) => {
+    var sort = req.params.sortBy
+
     try {
-        const users = await User.find()
+
+        const aggregateQuery = []
+        console.log("req.params.sortBy", sort);
+        if (sort) {
+            aggregateQuery.push({ "$sort": { "firstName": sort === "ascending" ? 1 : -1 } })
+        }
+        console.log("aggregateQuery", aggregateQuery);
+        const users = await User.aggregate(aggregateQuery, { collation: { locale: "en", strength: 1 } })
+        // const users = await User.aggregate([
+        //     { "$sort": { "firstName": sort === "ascending" ? 1 : -1 } }
+        // ], { collation: { locale: "en", strength: 1 } })
         res.send((users));
     }
     catch (err) {
@@ -20,20 +45,25 @@ router.get('/getUsers', authenticate, async (req, res) => {
 });
 
 
-////////////////////////////// getUsersByAssendingOrder///////////////////////
-router.get('/setUserData', authenticate, async (req, res) => {
-    console.log("hello");
+router.get("/dashboard/getUserBy/page/:pageNumber", authenticate, async (req, res) => {
+
     try {
+
+        let page = req.params.pageNumber
+        console.log(page);
+        let size = 2
+        if (!page) {
+            page = 1
+        }
+        const limit = parseInt(size);
         const users = await User.aggregate([
-            { "$sort": { "firstName": 1 } }
-        ], { collation: { locale: "en", strength: 1 } })
-        // const users = await User.find().collation({ locale: "en" })
-        //     .sort({ firstName: 1 })
-        //     .exec()
-        res.send((users));
+            { $skip: (page - 1) * size },
+            { $limit: limit }
+        ])
+        res.send(users)
     }
     catch (err) {
-        console.log("error: ", err)
+        console.log("error: ", err);
         res.send("error" + err);
     }
 });

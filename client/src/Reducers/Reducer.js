@@ -1,4 +1,4 @@
-import { DELETE_SELECT_EMPLOYEE, SERCH_USER_DATA, SUBMIT_DATA, SELECT_EDIT_LIST, UPDATE_SELECTED_USERDATA, GET_DATA, ASSENDINGORDERDATA } from "../actions/Type"
+import { DELETE_SELECT_EMPLOYEE, SERCH_USER_DATA, SUBMIT_DATA, SELECT_EDIT_LIST, UPDATE_SELECTED_USERDATA, GET_DATA, ASSENDINGORDERDATA, PAGGINATION } from "../actions/Type"
 
 const initialState = {
     // formState: {
@@ -32,7 +32,11 @@ const employeeReducer = (state = initialState, action) => {
                 ...state,
                 employeeList: action.payload
             }
-
+        case PAGGINATION:
+            return {
+                ...state,
+                employeeList: action.payload
+            }
         case SUBMIT_DATA:
             action.userData = {
                 ...action.userData,

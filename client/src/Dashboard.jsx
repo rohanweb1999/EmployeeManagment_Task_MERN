@@ -1,39 +1,50 @@
 import { React, useEffect, useState } from "react";
 import { NavLink, useHistory } from "react-router-dom";
-import Axios from 'axios'
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'animate.css';
-import { assendingOrderGetData, deleteSelectEmployee, fetchData, logoutUser, searchUser, sortUserData } from "./actions";
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
+import { deleteSelectEmployee, fetchData, logoutUser, paggination, searchUser, sortUserData } from "./actions";
 toast.configure()
 
 const Dashboard = () => {
-    const employeeList = useSelector(state => state.employeeReducer.employeeList)
-    // console.log("empdata", employeeList);
-    // const dispatch = useContext(loginContext);
-    const dispatch = useDispatch();
-
-    //store the user data
-    // const [employeeList, setEmployeeList] = useState([]);
-
-    //destructuring the user data
-    // const { _id, firstName, lastName, email, contact, profession, salary } = employeeList;
-    const [searchData, setSearchData] = useState('')
-    const history = useHistory();
+    const [page, setpage] = useState('')
     const [selectOption, setselectOption] = useState('')
+    const [searchData, setSearchData] = useState('')
+    const employeeList = useSelector(state => state.employeeReducer.employeeList)
+
+    const dispatch = useDispatch();
+    const history = useHistory();
+
+    ///////////////  fetchdata /////////////////////////////
     useEffect(() => {
         dispatch(fetchData())
     }, [])
+    ///////////////  fetchdata /////////////////////////////
+
+    ///////////////////********** for sorting *********************///////////////
+    useEffect(() => {
+        dispatch(sortUserData(selectOption))
+    }, [selectOption])
+    ///////////////////********** for sorting *********************///////////////
+
+
 
     const handleDelete = (id) => {
         history.push('/')
         dispatch(deleteSelectEmployee(id))
     }
-    // useEffect(() => {
-    //     dispatch(sortUserData(selectOption))
-    // }, [selectOption])
-    console.log(selectOption);
+
+
+    ///////// for paggination ///////////////////////
+    useEffect(() => {
+        // console.log("page", page);
+        history.push(`/dashboard/getUserBy/page/${page}`)
+        dispatch(paggination(page))
+
+    }, [page])
     return (
         <div className="das-main-div">
             <div className="das-sub-div">
@@ -41,13 +52,13 @@ const Dashboard = () => {
                 <button onClick={() => dispatch(searchUser(searchData), setSearchData(''), console.log("submittData", searchData))}>Search</button>
             </div>
             <div className="menu-bar" >
-                <NavLink to="Logout"><button className='logout-btn' onClick={() => dispatch(logoutUser())}>LOG OUT</button></NavLink>
+                <NavLink to="/logout"><button className='logout-btn' onClick={() => dispatch(logoutUser())}>LOG OUT</button></NavLink>
                 <div className="custom-select" >
-
-                    <NavLink to={`/:sortBy=${selectOption}`}><select onClick={(e) => setselectOption(e.target.value)}>
-                        <option  >Sort By</option>
+                    <NavLink to={`/dashboard/getUserBy/${selectOption}`}><select onClick={(e) => setselectOption(e.target.value)}>
+                        <option disabled >sortBy</option>
                         <option value="ascending" >A-Z</option>
                         <option value="descending" >Z-A</option>
+
                     </select>
                     </NavLink>
                 </div>
@@ -59,7 +70,7 @@ const Dashboard = () => {
                     employeeList.map((element) => {
                         return (
                             <>
-                                <div className="employeeData">
+                                <div className="employeeData" key={element._id}>
                                     <div className="employeeFeild">
                                         <label>FirstName:-</label>
                                         <p>{element.firstName}</p>
@@ -108,6 +119,13 @@ const Dashboard = () => {
                     })
                 }
 
+
+            </div>
+            <div className="pagination" >
+
+                <Stack spacing={2} >
+                    <Pagination count={5} color="secondary" onChange={(e, value) => setpage(value)} />
+                </Stack>
 
             </div>
         </div >

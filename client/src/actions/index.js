@@ -1,5 +1,5 @@
 ////////////////    start load Modules //////////////////////////////////////
-import { ASSENDINGORDERDATA, DELETE_SELECT_EMPLOYEE, GET_DATA, LOGOUTUSR, SELECT_EDIT_LIST, SERCH_USER_DATA, SUBMIT_DATA, UPDATE_SELECTED_USERDATA } from "../actions/Type"
+import { ASSENDINGORDERDATA, DELETE_SELECT_EMPLOYEE, GET_DATA, LOGOUTUSR, PAGGINATION, SELECT_EDIT_LIST, SERCH_USER_DATA, SUBMIT_DATA, UPDATE_SELECTED_USERDATA } from "../actions/Type"
 import Axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -13,7 +13,7 @@ toast.configure()
 export const fetchData = () => {
     return (
         (dispatch) => {
-            Axios.get('/getUsers')
+            Axios.get('/dashboard/getUserBy/page/1')
                 .then((res) => {
                     const data = res.data
                     dispatch({ type: GET_DATA, payload: data })
@@ -110,15 +110,29 @@ export const searchUser = () => {
 
 }
 
-export const sortUserData = (number) => {
-    console.log("number", number);
+export const sortUserData = (selectOption) => {
+    // console.log("selectOption", selectOption);
     return (
         (dispatch) => {
-            Axios.get(`/sortUserData/sort?=${number}`)
+            Axios.get(`/dashboard/getUserBy/${selectOption}`)
                 .then((res) => {
                     const data = res.data
                     console.log("Assending Api", res.data);
                     dispatch({ type: ASSENDINGORDERDATA, payload: data })
+                })
+        }
+    )
+
+}
+
+export const paggination = (pageNumber) => {
+    console.log("pageNumber", pageNumber);
+    return (
+        (dispatch) => {
+            Axios.get(`/dashboard/getUserBy/page/${pageNumber}`)
+                .then((res) => {
+                    const data = res.data
+                    dispatch({ type: PAGGINATION, payload: data })
                 })
         }
     )
