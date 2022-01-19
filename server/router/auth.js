@@ -7,25 +7,25 @@ const authenticate = require("../middleware/authenticate");
 require('../db/conn');
 const User = require('../models/userSchema');
 
-//get users
-// router.get('/getUsers', authenticate, async (req, res) => {
-//     try {
-//         const users = await User.find()
-//         res.send((users));
+// router.get("/dashboard/getData/page=:pageNumber/:sortBy", authenticate, async (req, res) => {
+// 
+
+//         const result = await User.aggregate(aggregateQuery, { collation: { locale: "en", strength: 1 } })
+//         res.send((result))
 //     }
 //     catch (err) {
 //         console.log("error: ", err)
 //         res.send("error" + err);
 //     }
-// });
+
+// })
 
 
 ////////////////////////////// sort user ///////////////////////
-router.get("/dashboard/getUserBy/:sortBy", authenticate, async (req, res) => {
+router.get("/dashboard/getData/sort=:sortBy", authenticate, async (req, res) => {
     var sort = req.params.sortBy
 
     try {
-
         const aggregateQuery = []
         console.log("req.params.sortBy", sort);
         if (sort) {
@@ -43,9 +43,30 @@ router.get("/dashboard/getUserBy/:sortBy", authenticate, async (req, res) => {
         res.send("error" + err);
     }
 });
+////////////// SEARCH API FOR GET DATA ////////////////////////////
+router.get("/dashboard/getData/search=:searchByNameOrSalary", authenticate, async (req, res) => {
+    const searchDetails = req.params.searchByNameOrSalary
 
+    try {
+        const aggregateQuery = []
+        if (searchDetails) {
+            // aggregateQuery.push({ $match: { firstName: searchDetails } })
+            aggregateQuery.push({
+                $match: { $or: [{ firstName: searchDetails }, { salaryJan: parseInt(searchDetails) }] }
+            })
+        }
+        console.log("aggregateQuery for srch", aggregateQuery);
+        const users = await User.aggregate(aggregateQuery)
+        console.log("results for search", users);
+        res.send((users));
+    }
+    catch (err) {
+        console.log("error: ", err)
+        res.send("error" + err);
+    }
+});
 
-router.get("/dashboard/getUserBy/page/:pageNumber", authenticate, async (req, res) => {
+router.get("/dashboard/getData/page=:pageNumber", authenticate, async (req, res) => {
 
     try {
 
@@ -55,10 +76,9 @@ router.get("/dashboard/getUserBy/page/:pageNumber", authenticate, async (req, re
         if (!page) {
             page = 1
         }
-        const limit = parseInt(size);
         const users = await User.aggregate([
             { $skip: (page - 1) * size },
-            { $limit: limit }
+            { $limit: parseInt(size) }
         ])
         res.send(users)
     }

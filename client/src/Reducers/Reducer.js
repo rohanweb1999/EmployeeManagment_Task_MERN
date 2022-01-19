@@ -56,10 +56,10 @@ const employeeReducer = (state = initialState, action) => {
                 tempData: state.employeeList.filter((e) => e.id !== action.id)
             }
         case SERCH_USER_DATA:
+            console.log("actionData", action.payload);
             return {
                 ...state,
-                userInputFormSearch: action.data,
-                employeeList: state.tempData.filter((element) => element.firstName.startsWith(state.userInputFormSearch) || element.salary.toString().startsWith(state.userInputFormSearch)),
+                employeeList: action.payload,
             }
         case SELECT_EDIT_LIST:
             console.log("action.id", action.id);

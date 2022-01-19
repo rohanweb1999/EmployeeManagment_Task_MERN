@@ -10,10 +10,10 @@ toast.configure()
 
 
 //******************************* */ Actions start *******************************************//
-export const fetchData = () => {
+export const fetchData = (pageNumber) => {
     return (
         (dispatch) => {
-            Axios.get('/dashboard/getUserBy/page/1')
+            Axios.get(`/dashboard/getData/page=1`)
                 .then((res) => {
                     const data = res.data
                     dispatch({ type: GET_DATA, payload: data })
@@ -97,10 +97,10 @@ export const logoutUser = () => {
 }
 
 
-export const searchUser = () => {
+export const searchUser = (searchData) => {
     return (
         (dispatch) => {
-            Axios.get('/searchUser')
+            Axios.get(`/dashboard/getData/search=${searchData}`)
                 .then((res) => {
                     const data = res.data
                     dispatch({ type: SERCH_USER_DATA, payload: data })
@@ -110,11 +110,11 @@ export const searchUser = () => {
 
 }
 
-export const sortUserData = (selectOption) => {
+export const sortUserData = (pageNumber, selectOption) => {
     // console.log("selectOption", selectOption);
     return (
         (dispatch) => {
-            Axios.get(`/dashboard/getUserBy/${selectOption}`)
+            Axios.get(`/dashboard/getData/sort=${selectOption}`)
                 .then((res) => {
                     const data = res.data
                     console.log("Assending Api", res.data);
@@ -129,7 +129,7 @@ export const paggination = (pageNumber) => {
     console.log("pageNumber", pageNumber);
     return (
         (dispatch) => {
-            Axios.get(`/dashboard/getUserBy/page/${pageNumber}`)
+            Axios.get(`/dashboard/getData/page=${pageNumber}`)
                 .then((res) => {
                     const data = res.data
                     dispatch({ type: PAGGINATION, payload: data })
@@ -137,4 +137,4 @@ export const paggination = (pageNumber) => {
         }
     )
 
-}
+}   

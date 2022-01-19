@@ -32,9 +32,6 @@ const App = () => {
           <Route exact path="/"  ><Home></Home></Route>
           <Route path="/signUp"><Signup></Signup></Route>
           <Route path="/editUser/:id"  ><Signup></Signup></Route>
-          <Route path='/dashboard/getUserBy/:sortBy'><Dashboard></Dashboard></Route>
-          <Route path='/dashboard/getUserBy/page/:pageNumber'><Dashboard></Dashboard></Route>
-
           <ProtectedRoute exact path="/signIn" ><Signin></Signin></ProtectedRoute>
           <ProtectedRoute exact path="/logout" ><Signin></Signin></ProtectedRoute>
           <ProtectedRoute path="/dashboard" ><Dashboard></Dashboard></ProtectedRoute>

@@ -10,7 +10,7 @@ import { deleteSelectEmployee, fetchData, logoutUser, paggination, searchUser, s
 toast.configure()
 
 const Dashboard = () => {
-    const [page, setpage] = useState('')
+    const [page, setpage] = useState(1)
     const [selectOption, setselectOption] = useState('')
     const [searchData, setSearchData] = useState('')
     const employeeList = useSelector(state => state.employeeReducer.employeeList)
@@ -20,13 +20,13 @@ const Dashboard = () => {
 
     ///////////////  fetchdata /////////////////////////////
     useEffect(() => {
-        dispatch(fetchData())
+        dispatch(fetchData(page))
     }, [])
     ///////////////  fetchdata /////////////////////////////
 
     ///////////////////********** for sorting *********************///////////////
     useEffect(() => {
-        dispatch(sortUserData(selectOption))
+        dispatch(sortUserData(page, selectOption))
     }, [selectOption])
     ///////////////////********** for sorting *********************///////////////
 
@@ -38,29 +38,33 @@ const Dashboard = () => {
     }
 
 
-    ///////// for paggination ///////////////////////
+    /////// for paggination ///////////////////////
     useEffect(() => {
         // console.log("page", page);
-        history.push(`/dashboard/getUserBy/page/${page}`)
         dispatch(paggination(page))
 
     }, [page])
+    useEffect(() => {
+
+        dispatch(searchUser(searchData))
+
+    }, [searchData])
     return (
         <div className="das-main-div">
             <div className="das-sub-div">
                 <input onChange={e => setSearchData(e.target.value)} value={searchData} placeholder="Search Employee..." />
-                <button onClick={() => dispatch(searchUser(searchData), setSearchData(''), console.log("submittData", searchData))}>Search</button>
+
             </div>
             <div className="menu-bar" >
                 <NavLink to="/logout"><button className='logout-btn' onClick={() => dispatch(logoutUser())}>LOG OUT</button></NavLink>
                 <div className="custom-select" >
-                    <NavLink to={`/dashboard/getUserBy/${selectOption}`}><select onClick={(e) => setselectOption(e.target.value)}>
+                    <select onClick={(e) => setselectOption(e.target.value)}>
                         <option disabled >sortBy</option>
                         <option value="ascending" >A-Z</option>
                         <option value="descending" >Z-A</option>
 
                     </select>
-                    </NavLink>
+
                 </div>
             </div>
             <div className="list-div" >
