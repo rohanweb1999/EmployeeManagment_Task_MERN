@@ -1,28 +1,15 @@
-import { React, useEffect, useState } from 'react'
-// import Axios from "axios";
+import { React } from 'react'
 import 'antd/dist/antd.css';
-import { NavLink, useHistory } from 'react-router-dom';
-// import { useHistory } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import Cookies from 'js-cookie'
-import { useDispatch } from 'react-redux'
-import { logoutUser } from './actions';
-// import { Reducers, initialState } from './reducer/authReducer';
 
-// export const loginContext = createContext();
 
 const Navbar = () => {
 
-    const dispatch = useDispatch()
-    const getCookie = Cookies.get('jwtLogin')
 
-    const history = useHistory()
-    const [toggleButton, settoggleButton] = useState()
-    // const [state, dispatch] = useReducer(Reducers, initialState)
 
-    // const history = useHistory();
     const registration = () => {
         Cookies.remove('jwtLogin')
-        // dispatch({ type: 'LoginUser', payload: false })
     }
     const signin = () => {
         Cookies.remove('jwtLogin')

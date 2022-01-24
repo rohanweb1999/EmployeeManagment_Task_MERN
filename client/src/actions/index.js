@@ -1,5 +1,5 @@
 ////////////////    start load Modules //////////////////////////////////////
-import { ASSENDINGORDERDATA, DELETE_SELECT_EMPLOYEE, GET_DATA, LOGOUTUSR, PAGGINATION, SELECT_EDIT_LIST, SERCH_USER_DATA, SUBMIT_DATA, UPDATE_SELECTED_USERDATA } from "../actions/Type"
+import { DELETE_SELECT_EMPLOYEE, GET_DATA, LOGOUTUSR, SELECT_EDIT_LIST, SERCH_USER_DATA, SUBMIT_DATA, UPDATE_SELECTED_USERDATA } from "../actions/Type"
 import Axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -10,17 +10,17 @@ toast.configure()
 
 
 //******************************* */ Actions start *******************************************//
-export const fetchData = (pageNumber) => {
+export const fetchData = (pageNumber, selectOption, searchData) => {
+
     return (
         (dispatch) => {
-            Axios.get(`/dashboard/getData/page=1`)
+            Axios.get(`/dashboard/getData/page=${pageNumber}/${selectOption}`)
                 .then((res) => {
                     const data = res.data
                     dispatch({ type: GET_DATA, payload: data })
                 })
         }
     )
-
 }
 
 export const submitData = (userData) => {
@@ -110,31 +110,31 @@ export const searchUser = (searchData) => {
 
 }
 
-export const sortUserData = (pageNumber, selectOption) => {
-    // console.log("selectOption", selectOption);
-    return (
-        (dispatch) => {
-            Axios.get(`/dashboard/getData/sort=${selectOption}`)
-                .then((res) => {
-                    const data = res.data
-                    console.log("Assending Api", res.data);
-                    dispatch({ type: ASSENDINGORDERDATA, payload: data })
-                })
-        }
-    )
+// export const sortUserData = (pageNumber, selectOption) => {
+//     // console.log("selectOption", selectOption);
+//     return (
+//         (dispatch) => {
+//             Axios.get(`/dashboard/getData/sort=${selectOption}`)
+//                 .then((res) => {
+//                     const data = res.data
+//                     console.log("Assending Api", res.data);
+//                     dispatch({ type: ASSENDINGORDERDATA, payload: data })
+//                 })
+//         }
+//     )
 
-}
+// }
 
-export const paggination = (pageNumber) => {
-    console.log("pageNumber", pageNumber);
-    return (
-        (dispatch) => {
-            Axios.get(`/dashboard/getData/page=${pageNumber}`)
-                .then((res) => {
-                    const data = res.data
-                    dispatch({ type: PAGGINATION, payload: data })
-                })
-        }
-    )
+// export const paggination = (pageNumber) => {
+//     console.log("pageNumber", pageNumber);
+//     return (
+//         (dispatch) => {
+//             Axios.get(`/dashboard/getData/page=${pageNumber}`)
+//                 .then((res) => {
+//                     const data = res.data
+//                     dispatch({ type: PAGGINATION, payload: data })
+//                 })
+//         }
+//     )
 
-}   
+// }   

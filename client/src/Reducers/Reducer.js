@@ -1,19 +1,8 @@
-import { DELETE_SELECT_EMPLOYEE, SERCH_USER_DATA, SUBMIT_DATA, SELECT_EDIT_LIST, UPDATE_SELECTED_USERDATA, GET_DATA, ASSENDINGORDERDATA, PAGGINATION } from "../actions/Type"
+import { DELETE_SELECT_EMPLOYEE, SUBMIT_DATA, SELECT_EDIT_LIST, UPDATE_SELECTED_USERDATA, GET_DATA, ASSENDINGORDERDATA, PAGGINATION } from "../actions/Type"
 
 const initialState = {
-    // formState: {
-    //     firstName: "",
-    //     lastName: "",
-    //     email: "",
-    //     contact: "",
-    //     profession: "",
-    //     salary: "",
-    //     password: "",
-    //     confirmPassword: "",
-    // },
-    userInputFormSearch: "",
+
     employeeList: [],
-    tempData: [],
 
 }
 
@@ -55,12 +44,12 @@ const employeeReducer = (state = initialState, action) => {
                 employeeList: state.employeeList.filter((e) => e.id !== action.id),
                 tempData: state.employeeList.filter((e) => e.id !== action.id)
             }
-        case SERCH_USER_DATA:
-            console.log("actionData", action.payload);
-            return {
-                ...state,
-                employeeList: action.payload,
-            }
+        // case SERCH_USER_DATA:
+        //     console.log("actionData", action.payload);
+        //     return {
+        //         ...state,
+        //         employeeList: action.payload,
+        //     }
         case SELECT_EDIT_LIST:
             console.log("action.id", action.id);
             const selectedObj = state.tempData.find(
@@ -76,7 +65,7 @@ const employeeReducer = (state = initialState, action) => {
         case UPDATE_SELECTED_USERDATA:
             // const newUpdateData = state.employeeList.map((e) => e.id === state.selectedEditId ? { ...e, data: state.formState } : e)
             const empInd = state.employeeList.findIndex(res => res.id === action.id)
-            const tempInd = state.tempData.findIndex(res => res.id === action.id)
+            // const tempInd = state.tempData.findIndex(res => res.id === action.id)
             state.employeeList[empInd] = action.data
             state.tempData[empInd] = action.data
             return {

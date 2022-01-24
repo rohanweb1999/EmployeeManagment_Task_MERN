@@ -7,79 +7,40 @@ const authenticate = require("../middleware/authenticate");
 require('../db/conn');
 const User = require('../models/userSchema');
 
-// router.get("/dashboard/getData/page=:pageNumber/:sortBy", authenticate, async (req, res) => {
-// 
-
-//         const result = await User.aggregate(aggregateQuery, { collation: { locale: "en", strength: 1 } })
-//         res.send((result))
-//     }
-//     catch (err) {
-//         console.log("error: ", err)
-//         res.send("error" + err);
-//     }
-
-// })
-
-
-////////////////////////////// sort user ///////////////////////
-router.get("/dashboard/getData/sort=:sortBy", authenticate, async (req, res) => {
-    var sort = req.params.sortBy
-
+router.get("/dashboard/getData/page=:pageNumber/:sortBy", async (req, res) => {
     try {
-        const aggregateQuery = []
-        console.log("req.params.sortBy", sort);
-        if (sort) {
-            aggregateQuery.push({ "$sort": { "firstName": sort === "ascending" ? 1 : -1 } })
+        aggregateQuery = []
+        const { pageNumber, sortBy } = req.params
+        let size = 3
+
+        if (pageNumber) {
+            aggregateQuery.push({ $skip: (pageNumber - 1) * size },
+                { $limit: parseInt(size) })
         }
-        console.log("aggregateQuery", aggregateQuery);
-        const users = await User.aggregate(aggregateQuery, { collation: { locale: "en", strength: 1 } })
-        // const users = await User.aggregate([
-        //     { "$sort": { "firstName": sort === "ascending" ? 1 : -1 } }
-        // ], { collation: { locale: "en", strength: 1 } })
-        res.send((users));
-    }
-    catch (err) {
-        console.log("error: ", err)
-        res.send("error" + err);
-    }
-});
-////////////// SEARCH API FOR GET DATA ////////////////////////////
-router.get("/dashboard/getData/search=:searchByNameOrSalary", authenticate, async (req, res) => {
-    const searchDetails = req.params.searchByNameOrSalary
-
-    try {
-        const aggregateQuery = []
-        if (searchDetails) {
-            // aggregateQuery.push({ $match: { firstName: searchDetails } })
+        if (sortBy === 'ascending' || sortBy === 'descending') {
+            console.log("ascending")
+            aggregateQuery.push({ "$sort": { "firstName": sortBy === "ascending" ? 1 : -1 } })
+        } else {
             aggregateQuery.push({
-                $match: { $or: [{ firstName: searchDetails }, { salaryJan: parseInt(searchDetails) }] }
+                // $match: { $or: [{ firstName: sortBy }, { salaryJan: parseInt(sortBy) }] }
+                $match: {
+                    $or: [
+
+                        // { firstName: { $regex: '^' + sortBy } }
+                        {
+                            "firstName": RegExp("^" + sortBy, "i")
+                        },
+                        {
+                            "salaryJan": RegExp(parseInt.sortBy)
+                        }
+                    ]
+                }
+
             })
         }
-        console.log("aggregateQuery for srch", aggregateQuery);
-        const users = await User.aggregate(aggregateQuery)
-        console.log("results for search", users);
-        res.send((users));
-    }
-    catch (err) {
-        console.log("error: ", err)
-        res.send("error" + err);
-    }
-});
-
-router.get("/dashboard/getData/page=:pageNumber", authenticate, async (req, res) => {
-
-    try {
-
-        let page = req.params.pageNumber
-        console.log(page);
-        let size = 2
-        if (!page) {
-            page = 1
-        }
-        const users = await User.aggregate([
-            { $skip: (page - 1) * size },
-            { $limit: parseInt(size) }
-        ])
+        console.log(aggregateQuery)
+        const users = await User.aggregate(aggregateQuery, { collation: { locale: "en", strength: 1 } })
+        console.log("users", users)
         res.send(users)
     }
     catch (err) {

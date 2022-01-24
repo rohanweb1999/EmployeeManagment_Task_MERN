@@ -8,8 +8,8 @@ import { Form, Button } from "antd";
 import { useFormik } from "formik";
 import queryString from 'query-string';
 import Cookies from 'js-cookie'
-import { useDispatch, useSelector } from "react-redux";
-import { selectEditList, submitData, updateSelectedUserdata } from "./actions";
+import { useDispatch } from "react-redux";
+import { submitData, updateSelectedUserdata } from "./actions";
 
 
 const Signup = () => {
@@ -23,7 +23,7 @@ const Signup = () => {
     const { id } = queryString.parse(window.location.search)
 
 
-    const formState = useSelector((state) => state.employeeReducer.formState);
+    // const formState = useSelector((state) => state.employeeReducer.formState);
     //use UseFormik
     const formik = useFormik({
         initialValues: {
@@ -84,7 +84,7 @@ const Signup = () => {
         } else {
             Cookies.remove('jwtLogin')
         }
-    }, [editedData])
+    }, [editedData, id, formik])
 
 
 

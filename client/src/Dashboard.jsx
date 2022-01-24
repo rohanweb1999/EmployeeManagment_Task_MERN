@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from "react";
+import { React, useEffect, useState, useCallback } from "react";
 import { NavLink, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from 'react-toastify';
@@ -6,54 +6,37 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'animate.css';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-import { deleteSelectEmployee, fetchData, logoutUser, paggination, searchUser, sortUserData } from "./actions";
+import debounce from 'lodash.debounce';
+import { deleteSelectEmployee, fetchData, logoutUser } from "./actions";
 toast.configure()
 
 const Dashboard = () => {
     const [page, setpage] = useState(1)
-    const [selectOption, setselectOption] = useState('')
-    const [searchData, setSearchData] = useState('')
+    const [selectOption, setselectOption] = useState('ascending')
     const employeeList = useSelector(state => state.employeeReducer.employeeList)
 
     const dispatch = useDispatch();
     const history = useHistory();
 
     ///////////////  fetchdata /////////////////////////////
-    useEffect(() => {
-        dispatch(fetchData(page))
-    }, [])
+    useEffect((e) => {
+        dispatch(fetchData(page, selectOption))
+    }, [page, selectOption, dispatch])
     ///////////////  fetchdata /////////////////////////////
-
-    ///////////////////********** for sorting *********************///////////////
-    useEffect(() => {
-        dispatch(sortUserData(page, selectOption))
-    }, [selectOption])
-    ///////////////////********** for sorting *********************///////////////
-
-
 
     const handleDelete = (id) => {
         history.push('/')
         dispatch(deleteSelectEmployee(id))
     }
-
-
-    /////// for paggination ///////////////////////
-    useEffect(() => {
-        // console.log("page", page);
-        dispatch(paggination(page))
-
-    }, [page])
-    useEffect(() => {
-
-        dispatch(searchUser(searchData))
-
-    }, [searchData])
+    const onchangeChandler = event => {
+        console.log("hello", event.target.value);
+        setselectOption(event.target.value)
+    }
+    const debouncedOnChange = debounce(onchangeChandler, 500)
     return (
         <div className="das-main-div">
             <div className="das-sub-div">
-                <input onChange={e => setSearchData(e.target.value)} value={searchData} placeholder="Search Employee..." />
-
+                <input onChange={debouncedOnChange} placeholder="Search Employee..." />
             </div>
             <div className="menu-bar" >
                 <NavLink to="/logout"><button className='logout-btn' onClick={() => dispatch(logoutUser())}>LOG OUT</button></NavLink>

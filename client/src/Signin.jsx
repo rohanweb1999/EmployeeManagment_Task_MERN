@@ -1,14 +1,12 @@
 import { React, useContext } from 'react'
 import { NavLink, useHistory } from "react-router-dom";
 import { Button, Form } from 'antd';
-import Axios from "axios";
 import { useFormik } from "formik";
 import { TextField } from "@material-ui/core";
 import './App.css';
 import { loginContext } from './App.js'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { LOGIN_USER_DATA } from './actions/Type';
 import { loginUserData } from './actions';
 toast.configure()
 const Signin = () => {
