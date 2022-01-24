@@ -65,7 +65,6 @@ const userSchema = new mongoose.Schema({
 //     }
 //     next();
 // });
-
 //generating token
 userSchema.methods.generateAuthToken = async function () {
     try {
@@ -80,6 +79,8 @@ userSchema.methods.generateAuthToken = async function () {
     catch (err) {
         const jwt = require('jsonwebtoken');
         const User = require('../models/userSchema');
+        const address = require('../models/userSchema');
+
 
         module.exports = Authenticate;
     }
@@ -88,5 +89,6 @@ userSchema.methods.generateAuthToken = async function () {
 
 //model for users collection
 const User = mongoose.model('User', userSchema);
+
 
 module.exports = User;

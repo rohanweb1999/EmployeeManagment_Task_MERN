@@ -69,10 +69,10 @@ router.post('/signUp', async (req, res) => {
         token: req.body.token
 
     })
-    try {
 
+    try {
         const usersData = await user.save();
-        res.send((usersData))
+        res.send((usersData, addreshData))
         // console.log("data added", usersData);
     }
     catch (err) {
