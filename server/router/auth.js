@@ -6,6 +6,52 @@ const authenticate = require("../middleware/authenticate");
 
 require('../db/conn');
 const User = require('../models/userSchema');
+const City = require('../models/cityShema')
+const country = require('../models/countrySchema')
+const State = require('../models/stateSchema')
+
+router.get("/world-countries", async (req, res) => {
+    try {
+        const result = await country.find();
+        res.send(result)
+    }
+    catch (err) {
+
+        console.log("error: ", err);
+        res.send("error" + err);
+    }
+})
+
+router.get("/getState/:countryId", async (req, res) => {
+    const id = req.params.countryId
+    try {
+
+        aggregateQuery = [{ $match: { "countryId": id } }]
+
+        const result = await State.aggregate(aggregateQuery)
+        res.send(result)
+    }
+    catch (err) {
+
+        console.log("error: ", err);
+        res.send("error" + err);
+    }
+})
+router.get("/getcities/:stateId", async (req, res) => {
+    const id = req.params.stateId
+    try {
+
+        aggregateQuery = [{ $match: { "stateId": id } }]
+
+        const result = await City.aggregate(aggregateQuery)
+        res.send(result)
+    }
+    catch (err) {
+
+        console.log("error: ", err);
+        res.send("error" + err);
+    }
+})
 
 router.get("/dashboard/getData/page=:pageNumber/:sortBy", async (req, res) => {
     try {
@@ -64,6 +110,9 @@ router.post('/signUp', async (req, res) => {
         salaryJan: req.body.salaryJan,
         salaryFeb: req.body.salaryFeb,
         salaryMar: req.body.salaryMar,
+        countryId: req.body.countryId,
+        stateId: req.body.stateId,
+        cityId: req.body.cityId,
         password: req.body.password,
         confirmPassword: req.body.confirmPassword,
         token: req.body.token
@@ -72,7 +121,7 @@ router.post('/signUp', async (req, res) => {
 
     try {
         const usersData = await user.save();
-        res.send((usersData, addreshData))
+        res.send((usersData))
         // console.log("data added", usersData);
     }
     catch (err) {

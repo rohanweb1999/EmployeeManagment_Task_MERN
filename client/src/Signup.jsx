@@ -16,31 +16,70 @@ import { submitData, updateSelectedUserdata } from "./actions";
 const Signup = () => {
 
     const [data, setData] = useState([])
-    const [getCountry, setCountry] = useState()
-    const [getState, setState] = useState([])
-    const [selectedState, setSelectedState] = useState();
-    const [cities, setcities] = useState([]);
+    const [countryId, setCountryId] = useState('');
+    const [stateId, setStateId] = useState('');
+    const [newState, setnewState] = useState([]);
+    const [newcities, setnewcities] = useState([])
+
+
+
     useEffect(() => {
-        Axios.get("https://pkgstore.datahub.io/core/world-cities/world-cities_json/data/5b3dd46ad10990bca47b04b4739a02ba/world-cities_json.json")
+        Axios.get("/world-countries")
             .then(res => {
-                // console.log(res.data);
                 setData(res.data)
             })
             .catch(err => {
                 console.log("error: " + err);
             })
     }, [])
-    const country = [...new Set(data.map(items => items.country))]
+    useEffect(() => {
+        if (countryId) {
+            Axios.get(`/getState/${countryId}`)
+                .then(res => {
+                    setnewState(res.data)
+
+                })
+                .catch(err => {
+                    console.log("error: " + err);
+                })
+        }
+
+    }, [countryId])
+    useEffect(() => {
+        if (stateId) {
+            Axios.get(`/getcities/${stateId}`)
+                .then(res => {
+                    setnewcities(res.data)
+
+                })
+                .catch(err => {
+                    console.log("error: " + err);
+                })
+        }
+
+    }, [stateId])
+
+
+
+
+    const country = [...new Set(data.map(items => items.countryName))]
+    const state = [...new Set(newState.map(items => items.stateName))]
     country.sort();
     const handleCountryChange = (e) => {
-        let states = data.filter(state => state.country === e.target.value);
-        states = [...new Set(states.map(item => item.subcountry))];
-        console.log("states", states);
-        setState(states)
+        let getCountryId = data.filter(id => id.countryName === e.target.value);
+
+        getCountryId = [...new Set(getCountryId.map(item => item._id))];
+        setCountryId(getCountryId)
+        // formik.handleChange()
+
     }
     const handleStateChange = (e) => {
-        let cities = data.filter(city => city.subcountry === e.target.value)
-        setcities(cities)
+        let getStateId = newState.filter((element) => {
+            return element.stateName === e.target.value
+        })
+        getStateId = [...new Set(getStateId.map(item => item._id))]
+        setStateId(getStateId)
+
     }
     //navigate the page
     const dispatch = useDispatch()
@@ -67,9 +106,9 @@ const Signup = () => {
             salaryFeb: "",
             salaryMar: "",
             password: "",
-            country: "",
-            state: "",
-            city: "",
+            countryId: "89989898",
+            stateId: "989898989",
+            cityId: "8898989989",
             confirmPassword: "",
         },
 
@@ -205,30 +244,23 @@ const Signup = () => {
                         onChange={formik.handleChange}
                         value={formik.values.salaryMar}
                     />
-                    <div>
-                        <label>Country</label>
-                        <select onChange={(e) => handleCountryChange(e)}>
+                    <div className="DropDownMenu">
+                        <select name="countryId" value={formik.values.countryId} onChange={(e) => handleCountryChange(e)}>
                             <option value="">Select Country</option>
-                            {country.map(items => <option value={getCountry} key={items}>{items}</option>)}
+                            {country.map(items => <option value={items.countryName} key={items}>{items}</option>)}
                         </select>
-                    </div>
-                    <div>
-                        <label>State</label>
                         <select onChange={(e) => handleStateChange(e)}>
                             <option value="">Select State</option>
 
-                            {getState.map(items => <option value={selectedState} key={items}>{items}</option>)}
+                            {state.map(items => <option value={items.stateName} key={items}>{items}</option>)}
                         </select>
-                    </div>
-
-                    <div>
-                        <label>City</label>
                         <select>
                             <option value="">Select City</option>
 
-                            {cities.map(items => <option value={items.name} key={items.name}>{items.name}</option>)}
+                            {newcities.map(items => <option value={items.cityName} key={items.cityName}>{items.cityName}</option>)}
                         </select>
                     </div>
+
                     <TextField
                         label="Password"
                         variant="standard"
