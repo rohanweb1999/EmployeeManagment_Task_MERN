@@ -1,5 +1,5 @@
 ////////////////    start load Modules //////////////////////////////////////
-import { DELETE_SELECT_EMPLOYEE, GET_DATA, LOGOUTUSR, SELECT_EDIT_LIST, SERCH_USER_DATA, SUBMIT_DATA, UPDATE_SELECTED_USERDATA } from "../actions/Type"
+import { DELETE_SELECT_EMPLOYEE, GET_ALL_COUNTRY, GET_CITIES, GET_DATA, GET_STATE, LOGOUTUSR, SELECT_EDIT_LIST, SERCH_USER_DATA, SUBMIT_DATA, UPDATE_SELECTED_USERDATA } from "../actions/Type"
 import Axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -18,6 +18,44 @@ export const fetchData = (pageNumber, selectOption, searchData) => {
                 .then((res) => {
                     const data = res.data
                     dispatch({ type: GET_DATA, payload: data })
+                })
+        }
+    )
+}
+
+
+export const getAllCountries = () => {
+
+    return (
+        (dispatch) => {
+            Axios.get("/getAllCountries")
+                .then((res) => {
+                    const result = res.data
+                    dispatch({ type: GET_ALL_COUNTRY, payload: result })
+                })
+        }
+    )
+}
+export const getState = (selectedCountryId) => {
+
+    return (
+        (dispatch) => {
+            Axios.get(`/getState/${selectedCountryId}`)
+                .then((res) => {
+                    const result = res.data
+                    dispatch({ type: GET_STATE, payload: result })
+                })
+        }
+    )
+}
+export const getCities = (stateId) => {
+
+    return (
+        (dispatch) => {
+            Axios.get(`/getcities/${stateId}`)
+                .then((res) => {
+                    const result = res.data
+                    dispatch({ type: GET_CITIES, payload: result })
                 })
         }
     )

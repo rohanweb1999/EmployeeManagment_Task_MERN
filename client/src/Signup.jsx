@@ -9,90 +9,75 @@ import { Form, Button } from "antd";
 import { useFormik } from "formik";
 import queryString from 'query-string';
 import Cookies from 'js-cookie'
-import { useDispatch } from "react-redux";
-import { submitData, updateSelectedUserdata } from "./actions";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllCountries, getCities, getState, submitData, updateSelectedUserdata } from "./actions";
 
 
 const Signup = () => {
 
-    const [data, setData] = useState([])
-    const [countryId, setCountryId] = useState('');
-    const [stateId, setStateId] = useState('');
-    const [newState, setnewState] = useState([]);
-    const [newcities, setnewcities] = useState([])
+
+    const dispatch = useDispatch()
+    const history = useHistory();
+    //Here ID will find
+    const { id } = queryString.parse(window.location.search)
+    // const formState = useSelector((state) => state.employeeReducer.formState)
+
+
+    ///////////////////////////////  UseState Start /////////////////////////////////////////
+    const [editedData, seteditedData] = useState([])  //Here Edited Data store
+    const [selectedCountryId, setselectedCountryId] = useState();  //user Selected  country Id
+    const [stateId, setStateId] = useState(''); // user Selected State Id
+    ///////////////////////////////  UseState End /////////////////////////////////////////
+
+    ///////////////////////////////  UseSelector Start /////////////////////////////////////////
+    const data = useSelector((state) => state.employeeReducer.data);
+    const newState = useSelector((state) => state.employeeReducer.newState);
+    const newcities = useSelector((state) => state.employeeReducer.newcities);
+    ///////////////////////////////  UseSelector End /////////////////////////////////////////
 
 
 
+    ///////////////////////////////  UseEffect Start /////////////////////////////////////////
     useEffect(() => {
-        Axios.get("/world-countries")
-            .then(res => {
-                setData(res.data)
-            })
-            .catch(err => {
-                console.log("error: " + err);
-            })
+        dispatch(getAllCountries())
     }, [])
     useEffect(() => {
-        if (countryId) {
-            Axios.get(`/getState/${countryId}`)
-                .then(res => {
-                    setnewState(res.data)
-
-                })
-                .catch(err => {
-                    console.log("error: " + err);
-                })
+        if (selectedCountryId) {
+            dispatch(getState(selectedCountryId))
         }
 
-    }, [countryId])
+    }, [selectedCountryId])
+
+
     useEffect(() => {
         if (stateId) {
-            Axios.get(`/getcities/${stateId}`)
-                .then(res => {
-                    setnewcities(res.data)
-
-                })
-                .catch(err => {
-                    console.log("error: " + err);
-                })
+            dispatch(getCities(stateId))
         }
 
     }, [stateId])
+    ///////////////////////////////  UseEffect End /////////////////////////////////////////
 
-
-
-
-    const country = [...new Set(data.map(items => items.countryName))]
-    const state = [...new Set(newState.map(items => items.stateName))]
-    country.sort();
+    ////////////////// HandleChange Events start //////////////////////////////
     const handleCountryChange = (e) => {
-        let getCountryId = data.filter(id => id.countryName === e.target.value);
+        console.log("event", e.target.value);
+        setselectedCountryId(e.target.value)
+        // let getCountryId = data.find(element => element.countryName === e.target.value);
+        // getCountryId = [...new Set(getCountryId.map(item => item._id))];
+        // console.log("getCountryId", getCountryId);
 
-        getCountryId = [...new Set(getCountryId.map(item => item._id))];
-        setCountryId(getCountryId)
-        // formik.handleChange()
 
     }
     const handleStateChange = (e) => {
-        let getStateId = newState.filter((element) => {
-            return element.stateName === e.target.value
-        })
-        getStateId = [...new Set(getStateId.map(item => item._id))]
-        setStateId(getStateId)
-
+        setStateId(e.target.value)
+        // let getStateId = newState.filter((element) => {
+        //     return element.stateName === e.target.value
+        // })
+        // getStateId = [...new Set(getStateId.map(item => item._id))]
     }
-    //navigate the page
-    const dispatch = useDispatch()
-    const history = useHistory();
-    //for store the edited user data
-    const [editedData, seteditedData] = useState([])
+
+    ////////////////// HandleChange Events End //////////////////////////////
 
 
-    //Here ID will find
-    const { id } = queryString.parse(window.location.search)
-
-
-    // const formState = useSelector((state) => state.employeeReducer.formState);
     //use UseFormik
     const formik = useFormik({
         initialValues: {
@@ -106,17 +91,18 @@ const Signup = () => {
             salaryFeb: "",
             salaryMar: "",
             password: "",
-            countryId: "89989898",
-            stateId: "989898989",
-            cityId: "8898989989",
+            countryId: "",
+            stateId: "",
+            cityId: "",
             confirmPassword: "",
         },
 
         onSubmit: (values) => {
             //update the user data
             if (id) {
-                dispatch(updateSelectedUserdata(id, values))
                 history.push('/dashboard')
+                dispatch(updateSelectedUserdata(id, values))
+
             }
 
             else {
@@ -139,9 +125,9 @@ const Signup = () => {
     useEffect(() => {
         if (id) {
             Axios.get(`/editUser/${id}`)
+
                 .then(res => {
                     seteditedData(res.data);
-                    console.log("res.data", res.data);
                 })
                 .catch(err => {
                     console.log("error: " + err);
@@ -157,7 +143,7 @@ const Signup = () => {
         } else {
             Cookies.remove('jwtLogin')
         }
-    }, [editedData, id, formik])
+    }, [editedData])
 
 
 
@@ -245,19 +231,22 @@ const Signup = () => {
                         value={formik.values.salaryMar}
                     />
                     <div className="DropDownMenu">
-                        <select name="countryId" value={formik.values.countryId} onChange={(e) => handleCountryChange(e)}>
+                        <select name="countryId"
+                            onChange={(e) => handleCountryChange(e)}
+
+                        >
                             <option value="">Select Country</option>
-                            {country.map(items => <option value={items.countryName} key={items}>{items}</option>)}
+                            {data && data.map(element => <option value={formik.values.countryId = element._id} key={element._id}>{element.countryName}</option>)}
                         </select>
-                        <select onChange={(e) => handleStateChange(e)}>
+                        <select name="stateId" onChange={(e) => handleStateChange(e)}>
                             <option value="">Select State</option>
 
-                            {state.map(items => <option value={items.stateName} key={items}>{items}</option>)}
+                            {newState && newState.map(element => <option value={formik.values.stateId = element._id} key={element._id}>{element.stateName}</option>)}
                         </select>
-                        <select>
+                        <select name="cityId" >
                             <option value="">Select City</option>
 
-                            {newcities.map(items => <option value={items.cityName} key={items.cityName}>{items.cityName}</option>)}
+                            {newcities && newcities.map(element => <option value={formik.values.cityId = element._id} key={element.cityName}>{element.cityName}</option>)}
                         </select>
                     </div>
 

@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 
 
 const citySchema = mongoose.Schema({
-    cityId: { Number },
-    stateId: { Number },
+    cityId: { String },
+    stateId: { String },
     cityName: { String }
 })
 

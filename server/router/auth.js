@@ -10,7 +10,7 @@ const City = require('../models/cityShema')
 const country = require('../models/countrySchema')
 const State = require('../models/stateSchema')
 
-router.get("/world-countries", async (req, res) => {
+router.get("/getAllCountries", async (req, res) => {
     try {
         const result = await country.find();
         res.send(result)
@@ -174,17 +174,11 @@ router.get('/editUser/:id', async (req, res) => {
 
 //update user
 router.put('/updateUser/:id', async (req, res) => {
-
     try {
-        const user = await User.findById(req.params.id);
-        user.firstName = req.body.firstName;
-        user.lastName = req.body.lastName;
-        user.email = req.body.email;
-        user.password = req.body.password;
-        user.confirmPassword = req.body.confirmPassword;
-
-        const e1 = await user.save();
-        res.send((e1));
+        let id = req.params.id;
+        let updatedValue = req.body
+        const result = await User.findByIdAndUpdate(id, updatedValue)
+        res.send(result);
     }
     catch (err) {
         console.log("error: ", err)
@@ -215,9 +209,6 @@ router.get('/logout', authenticate, async (req, res) => {
 
     //remove token from database
     try {
-        //remove token from database
-        // console.log("req.authenticateUser.Tokens", req.authenticateUser.Token);
-
         req.authenticateUser.Token = req.authenticateUser.Token.filter((ele) => {
             return ele.token !== req.token
 

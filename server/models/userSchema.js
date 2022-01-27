@@ -40,15 +40,15 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     countryId: {
-        type: Number,
+        type: String,
         required: true
     },
     stateId: {
-        type: Number,
+        type: String,
         required: true
     },
     cityId: {
-        type: Number,
+        type: String,
         required: true
     },
     password: {

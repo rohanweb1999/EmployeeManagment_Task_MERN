@@ -1,8 +1,11 @@
-import { DELETE_SELECT_EMPLOYEE, SUBMIT_DATA, SELECT_EDIT_LIST, UPDATE_SELECTED_USERDATA, GET_DATA, ASSENDINGORDERDATA, PAGGINATION } from "../actions/Type"
+import { DELETE_SELECT_EMPLOYEE, SUBMIT_DATA, SELECT_EDIT_LIST, UPDATE_SELECTED_USERDATA, GET_DATA, ASSENDINGORDERDATA, PAGGINATION, GET_ALL_COUNTRY, GET_STATE, GET_CITIES } from "../actions/Type"
 
 const initialState = {
 
     employeeList: [],
+    data: [],
+    newState: [],
+    newcities: [],
 
 }
 
@@ -14,6 +17,24 @@ const employeeReducer = (state = initialState, action) => {
             return {
                 ...state,
                 employeeList: action.payload
+            }
+        case GET_ALL_COUNTRY:
+
+            return {
+                ...state,
+                data: action.payload
+            }
+        case GET_STATE:
+
+            return {
+                ...state,
+                newState: action.payload
+            }
+        case GET_CITIES:
+
+            return {
+                ...state,
+                newcities: action.payload
             }
 
         case ASSENDINGORDERDATA:

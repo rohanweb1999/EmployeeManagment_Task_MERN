@@ -29,7 +29,6 @@ const Dashboard = () => {
         dispatch(deleteSelectEmployee(id))
     }
     const onchangeChandler = event => {
-        console.log("hello", event.target.value);
         setselectOption(event.target.value)
     }
     const debouncedOnChange = debounce(onchangeChandler, 500)
