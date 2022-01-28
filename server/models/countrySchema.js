@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 ////////////////// Address Schema /////////////////////////////////////////
 
 const countrySchema = mongoose.Schema({
+
     countryId: { String },
     countryName: { String }
 });

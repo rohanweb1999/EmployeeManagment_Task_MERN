@@ -1,14 +1,19 @@
+
+////////////////////// Load module start///////////////////////////////////////////////////
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 const authenticate = require("../middleware/authenticate");
-
-require('../db/conn');
 const User = require('../models/userSchema');
 const City = require('../models/cityShema')
 const country = require('../models/countrySchema')
 const State = require('../models/stateSchema')
+require('../db/conn');
+
+////////////////////// Load module end///////////////////////////////////////////////////
+
+
 
 router.get("/getAllCountries", async (req, res) => {
     try {
@@ -55,9 +60,38 @@ router.get("/getcities/:stateId", async (req, res) => {
 
 router.get("/dashboard/getData/page=:pageNumber/:sortBy", async (req, res) => {
     try {
-        aggregateQuery = []
+        aggregateQuery = [
+
+            {
+                $lookup: {
+                    from: "countries", //collection to join
+                    localField: "countryId", //field from the input doc
+                    foreignField: "_id", //field from the document of 'from collection'
+                    as: "country" //output array field                        
+                }
+            },
+            {
+                $lookup: {
+                    from: "states",
+                    localField: "stateId",
+                    foreignField: "stateId",
+                    as: "state"
+                }
+            },
+
+            {
+                $lookup: {
+                    from: "cities",
+                    localField: "cityId",
+                    foreignField: "cityId",
+                    as: "city"
+                }
+            }
+        ]
+        // aggregateQuery.push(
+        // )
         const { pageNumber, sortBy } = req.params
-        let size = 3
+        let size = 4
 
         if (pageNumber) {
             aggregateQuery.push({ $skip: (pageNumber - 1) * size },
@@ -68,16 +102,14 @@ router.get("/dashboard/getData/page=:pageNumber/:sortBy", async (req, res) => {
             aggregateQuery.push({ "$sort": { "firstName": sortBy === "ascending" ? 1 : -1 } })
         } else {
             aggregateQuery.push({
-                // $match: { $or: [{ firstName: sortBy }, { salaryJan: parseInt(sortBy) }] }
                 $match: {
                     $or: [
 
-                        // { firstName: { $regex: '^' + sortBy } }
                         {
                             "firstName": RegExp("^" + sortBy, "i")
                         },
                         {
-                            "salaryJan": RegExp(parseInt.sortBy)
+                            "salaryJan": parseInt(sortBy)
                         }
                     ]
                 }
@@ -86,7 +118,6 @@ router.get("/dashboard/getData/page=:pageNumber/:sortBy", async (req, res) => {
         }
         console.log(aggregateQuery)
         const users = await User.aggregate(aggregateQuery, { collation: { locale: "en", strength: 1 } })
-        console.log("users", users)
         res.send(users)
     }
     catch (err) {
@@ -99,7 +130,6 @@ router.get("/dashboard/getData/page=:pageNumber/:sortBy", async (req, res) => {
 
 //register route
 router.post('/signUp', async (req, res) => {
-
     const user = new User({
         id: req.body.id,
         firstName: req.body.firstName,
@@ -121,8 +151,8 @@ router.post('/signUp', async (req, res) => {
 
     try {
         const usersData = await user.save();
+        console.log("data added", usersData);
         res.send((usersData))
-        // console.log("data added", usersData);
     }
     catch (err) {
         console.log("error: ", err)
@@ -162,8 +192,8 @@ router.post('/signIn', async (req, res) => {
 router.get('/editUser/:id', async (req, res) => {
 
     try {
+
         const user = await User.findById(req.params.id)
-        console.log("get request for a emp", user);
         res.send(user)
     }
     catch (err) {

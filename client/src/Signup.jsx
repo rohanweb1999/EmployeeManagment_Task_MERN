@@ -36,7 +36,6 @@ const Signup = () => {
     ///////////////////////////////  UseSelector End /////////////////////////////////////////
 
 
-
     ///////////////////////////////  UseEffect Start /////////////////////////////////////////
     useEffect(() => {
         dispatch(getAllCountries())
@@ -58,26 +57,13 @@ const Signup = () => {
     ///////////////////////////////  UseEffect End /////////////////////////////////////////
 
     ////////////////// HandleChange Events start //////////////////////////////
-    const handleCountryChange = (e) => {
-        console.log("event", e.target.value);
-        setselectedCountryId(e.target.value)
-        // let getCountryId = data.find(element => element.countryName === e.target.value);
-        // getCountryId = [...new Set(getCountryId.map(item => item._id))];
-        // console.log("getCountryId", getCountryId);
+    const handleCountryChange = (e) => { setselectedCountryId(e.target.value) }
 
-
-    }
-    const handleStateChange = (e) => {
-        setStateId(e.target.value)
-        // let getStateId = newState.filter((element) => {
-        //     return element.stateName === e.target.value
-        // })
-        // getStateId = [...new Set(getStateId.map(item => item._id))]
-    }
+    const handleStateChange = (e) => { setStateId(e.target.value) }
 
     ////////////////// HandleChange Events End //////////////////////////////
 
-
+    console.log("countryId", selectedCountryId);
     //use UseFormik
     const formik = useFormik({
         initialValues: {
@@ -113,9 +99,7 @@ const Signup = () => {
                     dispatch(submitData(values))
                     history.push('/signIn');
 
-                } else {
-                    alert("confirm password not match")
-                }
+                } else { alert("confirm password not match") }
 
             }
         }
@@ -127,6 +111,7 @@ const Signup = () => {
             Axios.get(`/editUser/${id}`)
 
                 .then(res => {
+                    console.log("hello", res.data);
                     seteditedData(res.data);
                 })
                 .catch(err => {
@@ -144,9 +129,6 @@ const Signup = () => {
             Cookies.remove('jwtLogin')
         }
     }, [editedData])
-
-
-
 
     return (
         <>

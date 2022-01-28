@@ -24,19 +24,9 @@ const employeeReducer = (state = initialState, action) => {
                 ...state,
                 data: action.payload
             }
-        case GET_STATE:
+        case GET_STATE: return { ...state, newState: action.payload }
 
-            return {
-                ...state,
-                newState: action.payload
-            }
-        case GET_CITIES:
-
-            return {
-                ...state,
-                newcities: action.payload
-            }
-
+        case GET_CITIES: return { ...state, newcities: action.payload }
         case ASSENDINGORDERDATA:
             return {
                 ...state,
@@ -65,12 +55,7 @@ const employeeReducer = (state = initialState, action) => {
                 employeeList: state.employeeList.filter((e) => e.id !== action.id),
                 tempData: state.employeeList.filter((e) => e.id !== action.id)
             }
-        // case SERCH_USER_DATA:
-        //     console.log("actionData", action.payload);
-        //     return {
-        //         ...state,
-        //         employeeList: action.payload,
-        //     }
+
         case SELECT_EDIT_LIST:
             console.log("action.id", action.id);
             const selectedObj = state.tempData.find(
@@ -84,9 +69,7 @@ const employeeReducer = (state = initialState, action) => {
             };
 
         case UPDATE_SELECTED_USERDATA:
-            // const newUpdateData = state.employeeList.map((e) => e.id === state.selectedEditId ? { ...e, data: state.formState } : e)
             const empInd = state.employeeList.findIndex(res => res.id === action.id)
-            // const tempInd = state.tempData.findIndex(res => res.id === action.id)
             state.employeeList[empInd] = action.data
             state.tempData[empInd] = action.data
             return {

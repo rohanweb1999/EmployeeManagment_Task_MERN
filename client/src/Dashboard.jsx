@@ -1,5 +1,5 @@
-import { React, useEffect, useState, useCallback } from "react";
-import { NavLink, useHistory } from "react-router-dom";
+import { React, useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -16,7 +16,6 @@ const Dashboard = () => {
     const employeeList = useSelector(state => state.employeeReducer.employeeList)
 
     const dispatch = useDispatch();
-    const history = useHistory();
 
     ///////////////  fetchdata /////////////////////////////
     useEffect((e) => {
@@ -25,7 +24,6 @@ const Dashboard = () => {
     ///////////////  fetchdata /////////////////////////////
 
     const handleDelete = (id) => {
-        history.push('/')
         dispatch(deleteSelectEmployee(id))
     }
     const onchangeChandler = event => {
@@ -53,7 +51,7 @@ const Dashboard = () => {
 
 
                 {
-                    employeeList.map((element) => {
+                    employeeList.map((element, index, country) => {
                         return (
                             <>
                                 <div className="employeeData" key={element._id}>
@@ -77,6 +75,8 @@ const Dashboard = () => {
                                         <label>Profession:-</label>
                                         <p>{element.profession}</p>
                                     </div>
+
+
                                     <div className="employeeFeild">
                                         <label>Salary of Jan:-</label>
                                         <p>{element.salaryJan}</p>

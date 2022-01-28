@@ -75,7 +75,6 @@ export const submitData = (userData) => {
     }
 }
 export const deleteSelectEmployee = (id) => {
-    // Axios.post(`/deleteUser/${id}`, id)
     Axios.delete(`/deleteUser/${id}`)
         .then(() => {
             window.location.reload()
@@ -117,7 +116,6 @@ export const updateSelectedUserdata = (id, data) => {
 }
 
 export const loginUserData = (data) => {
-    // console.log("data", data);
     Axios.post(`/signIn`, data)
         .then(() => {
             toast.success('Login successfully', { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
