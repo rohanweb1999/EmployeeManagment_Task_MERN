@@ -24,7 +24,6 @@ router.get("/getAllCountries", async (req, res) => {
     }
     catch (err) {
 
-        console.log("error: ", err);
         res.send("error" + err);
     }
 })
@@ -40,7 +39,6 @@ router.get("/getState/:countryId", async (req, res) => {
     }
     catch (err) {
 
-        console.log("error: ", err);
         res.send("error" + err);
     }
 })
@@ -55,12 +53,13 @@ router.get("/getcities/:stateId", async (req, res) => {
     }
     catch (err) {
 
-        console.log("error: ", err);
         res.send("error" + err);
     }
 })
 
 router.get("/dashboard/getData/page=:pageNumber/:sortBy", async (req, res) => {
+    const { pageNumber, sortBy } = req.params
+    let size = 4
     try {
         aggregateQuery = [
             {
@@ -89,10 +88,8 @@ router.get("/dashboard/getData/page=:pageNumber/:sortBy", async (req, res) => {
                 }
             }
         ]
-        // aggregateQuery.push(
-        // )
-        const { pageNumber, sortBy } = req.params
-        let size = 4
+
+
 
         if (pageNumber) {
             aggregateQuery.push({ $skip: (pageNumber - 1) * size },
@@ -130,7 +127,6 @@ router.get("/dashboard/getData/page=:pageNumber/:sortBy", async (req, res) => {
         res.send(users)
     }
     catch (err) {
-        console.log("error: ", err);
         res.send("error" + err);
     }
 });
@@ -139,32 +135,13 @@ router.get("/dashboard/getData/page=:pageNumber/:sortBy", async (req, res) => {
 
 //register route
 router.post('/signUp', async (req, res) => {
-    const user = new User({
-        id: req.body.id,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        contact: req.body.contact,
-        profession: req.body.profession,
-        salaryJan: req.body.salaryJan,
-        salaryFeb: req.body.salaryFeb,
-        salaryMar: req.body.salaryMar,
-        countryId: req.body.countryId,
-        stateId: req.body.stateId,
-        cityId: req.body.cityId,
-        password: req.body.password,
-        confirmPassword: req.body.confirmPassword,
-        token: req.body.token
-
-    })
+    const userData = new User(req.body)
 
     try {
-        const usersData = await user.save();
-        console.log("data added", usersData);
-        res.send((usersData))
+        const result = await userData.save();
+        res.send((result))
     }
     catch (err) {
-        console.log("error: ", err)
         res.send("error" + err)
     };
 })
@@ -192,8 +169,7 @@ router.post('/signIn', async (req, res) => {
         }
 
     } catch (err) {
-        console.log(err);
-
+        res.send("err" + err)
     }
 })
 
@@ -206,7 +182,6 @@ router.get('/editUser/:id', async (req, res) => {
         res.send(user)
     }
     catch (err) {
-        console.log("error: ", err)
         res.send("error" + err)
     };
 });
@@ -220,7 +195,6 @@ router.put('/updateUser/:id', async (req, res) => {
         res.send(result);
     }
     catch (err) {
-        console.log("error: ", err)
         res.send("error" + err)
     };
 });
@@ -233,7 +207,6 @@ router.delete('/deleteUser/:id', async (req, res) => {
         res.send(user)
     }
     catch (err) {
-        console.log("error: ", err)
         res.send("error" + err)
     };
 });
