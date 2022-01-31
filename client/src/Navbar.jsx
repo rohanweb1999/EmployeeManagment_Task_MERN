@@ -1,7 +1,13 @@
+/**
+ * @author Rohan Gajjar
+ */
+
+///////////// Load module start ////////////////////////////
 import { React } from 'react'
 import 'antd/dist/antd.css';
 import { NavLink } from 'react-router-dom';
 import Cookies from 'js-cookie'
+///////////// Load module End ////////////////////////////
 
 
 const Navbar = () => {

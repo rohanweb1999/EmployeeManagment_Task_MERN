@@ -1,3 +1,6 @@
+/**
+ * @author Rohan Gajjar
+ */
 import employeeReducer from './Reducer';
 
 import { combineReducers } from "redux";

@@ -1,3 +1,7 @@
+
+/**
+ * @author Rohan Gajjar
+ */
 import { React, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -76,7 +80,18 @@ const Dashboard = () => {
                                         <p>{element.profession}</p>
                                     </div>
 
-
+                                    <div className="employeeFeild">
+                                        <label>Country:-</label>
+                                        <p>{element.country && element.country.map((item => item.countryName))}</p>
+                                    </div>
+                                    <div className="employeeFeild">
+                                        <label>State:-</label>
+                                        <p>{element.state && element.state.map((item => item.stateName))}</p>
+                                    </div>
+                                    <div className="employeeFeild">
+                                        <label>City:-</label>
+                                        <p>{element.city && element.city.map((item => item.cityName))}</p>
+                                    </div>
                                     <div className="employeeFeild">
                                         <label>Salary of Jan:-</label>
                                         <p>{element.salaryJan}</p>
@@ -93,6 +108,7 @@ const Dashboard = () => {
                                         <label>Total salary:-</label>
                                         <p>{element.totalSalary}</p>
                                     </div>
+
                                     <div className="functionalButtons">
                                         <NavLink to={`/editUser/:?id=${element._id}`}>
                                             <button>Edit</button>

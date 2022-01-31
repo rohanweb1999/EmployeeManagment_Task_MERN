@@ -1,5 +1,13 @@
+/**
+ * @author Rohan Gajjar
+ */
+
+
+
+//////////////// Load module start ///////////////////////
 import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
+/////////////// Load module End //////////////////////////
 
 const ProtectedRoute = ({ auth, component: Component, ...rest }) => {
     return (

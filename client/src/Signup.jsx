@@ -1,16 +1,26 @@
+/**
+ * @author Rohan Gajjar
+ */
+
+/////////////////////////////////////////////////////////////////////////////////////
+/******************Load module start ***********************************************/
+/////////////////////////////////////////////////////////////////////////////////////
 
 import React, { useState, useEffect } from "react";
 import Axios from 'axios'
 import { TextField } from "@material-ui/core";
 import "./App.css";
 import { NavLink, useHistory } from "react-router-dom";
-import sideImg from "../src/employee.jpg";
+import sideImg from "../src/employee.png";
 import { Form, Button } from "antd";
 import { useFormik } from "formik";
 import queryString from 'query-string';
 import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from "react-redux";
 import { getAllCountries, getCities, getState, submitData, updateSelectedUserdata } from "./actions";
+/////////////////////////////////////////////////////////////////////////////////////
+/******************Load module End ***********************************************/
+/////////////////////////////////////////////////////////////////////////////////////
 
 
 const Signup = () => {
@@ -57,7 +67,10 @@ const Signup = () => {
     ///////////////////////////////  UseEffect End /////////////////////////////////////////
 
     ////////////////// HandleChange Events start //////////////////////////////
-    const handleCountryChange = (e) => { setselectedCountryId(e.target.value) }
+    const handleCountryChange = (e) => {
+        formik.values.countryId = e.target.value
+        setselectedCountryId(e.target.value)
+    }
 
     const handleStateChange = (e) => { setStateId(e.target.value) }
 
@@ -213,23 +226,28 @@ const Signup = () => {
                         value={formik.values.salaryMar}
                     />
                     <div className="DropDownMenu">
-                        <select name="countryId"
-                            onChange={(e) => handleCountryChange(e)}
 
-                        >
-                            <option value="">Select Country</option>
-                            {data && data.map(element => <option value={formik.values.countryId = element._id} key={element._id}>{element.countryName}</option>)}
-                        </select>
-                        <select name="stateId" onChange={(e) => handleStateChange(e)}>
+                        <div className="countryClass">
+                            <select name="countryId"
+                                onChange={(e) => handleCountryChange(e)}
+
+                            >
+                                <option value="">Select Country</option>
+                                {data && data.map(element => <option value={element._id} key={element._id}>{element.countryName}</option>)}
+                            </select></div>
+
+                        <div className="countryClass"> <select name="stateId" onChange={(e) => handleStateChange(e)}>
                             <option value="">Select State</option>
 
                             {newState && newState.map(element => <option value={formik.values.stateId = element._id} key={element._id}>{element.stateName}</option>)}
-                        </select>
-                        <select name="cityId" >
+                        </select></div>
+
+                        <div className="countryClass"> <select name="cityId" >
                             <option value="">Select City</option>
 
                             {newcities && newcities.map(element => <option value={formik.values.cityId = element._id} key={element.cityName}>{element.cityName}</option>)}
-                        </select>
+                        </select></div>
+
                     </div>
 
                     <TextField

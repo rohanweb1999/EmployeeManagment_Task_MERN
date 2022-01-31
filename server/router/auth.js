@@ -1,4 +1,6 @@
-
+/**
+ * @author Rohan Gajjar
+ */
 ////////////////////// Load module start///////////////////////////////////////////////////
 const express = require('express');
 const router = express.Router();
@@ -61,7 +63,6 @@ router.get("/getcities/:stateId", async (req, res) => {
 router.get("/dashboard/getData/page=:pageNumber/:sortBy", async (req, res) => {
     try {
         aggregateQuery = [
-
             {
                 $lookup: {
                     from: "countries", //collection to join
@@ -74,7 +75,7 @@ router.get("/dashboard/getData/page=:pageNumber/:sortBy", async (req, res) => {
                 $lookup: {
                     from: "states",
                     localField: "stateId",
-                    foreignField: "stateId",
+                    foreignField: "_id",
                     as: "state"
                 }
             },
@@ -83,7 +84,7 @@ router.get("/dashboard/getData/page=:pageNumber/:sortBy", async (req, res) => {
                 $lookup: {
                     from: "cities",
                     localField: "cityId",
-                    foreignField: "cityId",
+                    foreignField: "_id",
                     as: "city"
                 }
             }
@@ -99,7 +100,7 @@ router.get("/dashboard/getData/page=:pageNumber/:sortBy", async (req, res) => {
         }
         if (sortBy === 'ascending' || sortBy === 'descending') {
             console.log("ascending")
-            aggregateQuery.push({ "$sort": { "firstName": sortBy === "ascending" ? 1 : -1 } })
+            aggregateQuery.push({ "$sort": { "firstName": sortBy === "ascending" ? 1 : -1 } },)
         } else {
             aggregateQuery.push({
                 $match: {
@@ -110,13 +111,21 @@ router.get("/dashboard/getData/page=:pageNumber/:sortBy", async (req, res) => {
                         },
                         {
                             "salaryJan": parseInt(sortBy)
+                        },
+                        {
+                            "country.countryName": RegExp("^" + sortBy, "i")
+                        },
+                        {
+                            "state.stateName": RegExp("^" + sortBy, "i")
+                        },
+                        {
+                            "city.cityName": RegExp("^" + sortBy, "i")
                         }
                     ]
                 }
 
             })
         }
-        console.log(aggregateQuery)
         const users = await User.aggregate(aggregateQuery, { collation: { locale: "en", strength: 1 } })
         res.send(users)
     }

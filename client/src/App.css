@@ -1,6 +1,7 @@
 body {
   background-color: rgb(253, 253, 253) !important;
   height: 100vh;
+  overflow: hidden;
 }
 .box {
   background-color: white;
@@ -90,29 +91,19 @@ img {
 .Side-image {
   padding-top: 50px;
   position: relative;
-  animation-name: example;
-  animation-duration: 5s;
-  animation-delay: 5s;
-  animation-fill-mode: backwards;
+  animation: MoveUpDown 5s linear infinite;
   padding-right: 200px;
-  /* -webkit-animation: example 5s linear infinite; */
 }
-/* @keyframes example {
-  from {
-    top: 0px;
+@keyframes MoveUpDown {
+  0%,
+  100% {
+    bottom: 0px;
   }
-  to {
-    top: 30px;
+  50% {
+    bottom: 50px;
   }
 }
-@keyframes backward {
-  from {
-    top: 50px;
-  }
-  to {
-    top: 0px;
-  }
-} */
+
 .signup-btn {
   margin-right: 15px;
 }
@@ -264,4 +255,12 @@ img {
 .pagination {
   padding-left: 40%;
   height: 100vh;
+}
+.DropDownMenu {
+  display: flex;
+  background-color: gray;
+  margin-top: 10px;
+}
+.countryClass {
+  margin: 10px;
 }

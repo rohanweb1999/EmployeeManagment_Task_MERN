@@ -1,3 +1,6 @@
+/**
+ * @author Rohan Gajjar
+ */
 import React from 'react'
 
 const Footer = () => {
