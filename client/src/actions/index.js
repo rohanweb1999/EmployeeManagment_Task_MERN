@@ -2,7 +2,7 @@
  * @author Rohan Gajjar
  */
 ////////////////    start load Modules //////////////////////////////////////
-import { DELETE_SELECT_EMPLOYEE, GET_ALL_COUNTRY, GET_CITIES, GET_DATA, GET_STATE, LOGOUTUSR, SELECT_EDIT_LIST, SERCH_USER_DATA, SUBMIT_DATA, UPDATE_SELECTED_USERDATA } from "../actions/Type"
+import { DELETE_SELECT_EMPLOYEE, GET_ALL_COUNTRY, GET_CITIES, GET_DATA, GET_STATE, LOGIN_USER, LOGOUTUSR, LOGOUT_USER, SELECT_EDIT_LIST, SERCH_USER_DATA, SUBMIT_DATA, UPDATE_SELECTED_USERDATA } from "../actions/Type"
 import Axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -109,7 +109,6 @@ export const updateSelectedUserdata = (id, data) => {
     Axios.put(`/updateUser/${id}`, data)
         .then(() => {
             toast.success("Data Update Successfully", { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
-
         })
     return {
         type: UPDATE_SELECTED_USERDATA,
@@ -123,6 +122,7 @@ export const loginUserData = (data) => {
         .then(() => {
             toast.success('Login successfully', { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
         })
+
 }
 
 export const logoutUser = () => {
@@ -131,7 +131,7 @@ export const logoutUser = () => {
             toast.info('Logout', { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
         })
     return {
-        type: LOGOUTUSR
+        type: LOGOUT_USER
     }
 }
 
@@ -148,32 +148,3 @@ export const searchUser = (searchData) => {
     )
 
 }
-
-// export const sortUserData = (pageNumber, selectOption) => {
-//     // console.log("selectOption", selectOption);
-//     return (
-//         (dispatch) => {
-//             Axios.get(`/dashboard/getData/sort=${selectOption}`)
-//                 .then((res) => {
-//                     const data = res.data
-//                     console.log("Assending Api", res.data);
-//                     dispatch({ type: ASSENDINGORDERDATA, payload: data })
-//                 })
-//         }
-//     )
-
-// }
-
-// export const paggination = (pageNumber) => {
-//     console.log("pageNumber", pageNumber);
-//     return (
-//         (dispatch) => {
-//             Axios.get(`/dashboard/getData/page=${pageNumber}`)
-//                 .then((res) => {
-//                     const data = res.data
-//                     dispatch({ type: PAGGINATION, payload: data })
-//                 })
-//         }
-//     )
-
-// }   

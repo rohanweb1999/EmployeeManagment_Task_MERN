@@ -12,8 +12,8 @@ import Cookies from 'js-cookie'
 
 const Navbar = () => {
 
-
-
+    // const cookie = Cookies.get('jwtLogin')
+    // console.log("cokkie", cookie);
     const registration = () => {
         Cookies.remove('jwtLogin')
     }
@@ -33,6 +33,8 @@ const Navbar = () => {
 
                     <NavLink to="/Signup" id="btn2" ><button className='reg-btn' onClick={registration}>Registration</button></NavLink>
                     <NavLink to="/Signin" id="btn1" ><button className='signin-btn' onClick={signin}>SIGN IN</button></NavLink>
+                    <NavLink to="/Signin" id="btn1" ><button className='signin-btn' onClick={signin}>SIGN IN</button></NavLink>
+
 
 
 

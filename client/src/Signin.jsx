@@ -12,6 +12,7 @@ import { loginContext } from './App.js'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { loginUserData } from './actions';
+import { LOGIN_USER } from './actions/Type';
 ////////////////////// Load module End //////////////////
 
 toast.configure()
@@ -29,9 +30,6 @@ const Signin = () => {
         onSubmit: (values) => {
             history.push("/dashboard")
             dispatch(loginUserData(values))
-            // dispatch({ type: 'LoginUser', payload: true })
-
-
         }
     })
 
@@ -45,14 +43,14 @@ const Signin = () => {
 
                 <div className="form_div">
                     <form onSubmit={formik.handleSubmit}>
-                        <label>Username:-</label>
+                        <label>Email:-</label>
                         <TextField
                             required
                             type='text'
                             name="email"
                             value={formik.values.email}
                             onChange={formik.handleChange}
-                            placeholder="Enter Email ID..." />
+                            placeholder="Enter Email..." />
                         <div><br></br>
                             <label>Password:-</label>
                             <TextField

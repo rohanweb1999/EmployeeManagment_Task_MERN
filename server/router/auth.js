@@ -57,7 +57,7 @@ router.get("/getcities/:stateId", async (req, res) => {
     }
 })
 
-router.get("/dashboard/getData/page=:pageNumber/:sortBy", async (req, res) => {
+router.get("/dashboard/getData/page=:pageNumber/:sortBy", authenticate, async (req, res) => {
     const { pageNumber, sortBy } = req.params
     let size = 4
     try {
@@ -107,7 +107,16 @@ router.get("/dashboard/getData/page=:pageNumber/:sortBy", async (req, res) => {
                             "firstName": RegExp("^" + sortBy, "i")
                         },
                         {
-                            "salaryJan": parseInt(sortBy)
+                            "lastName": RegExp("^" + sortBy, "i")
+                        },
+                        {
+                            "contact": RegExp(sortBy)
+                        },
+                        {
+                            "profession": RegExp("^" + sortBy, "i")
+                        },
+                        {
+                            "email": RegExp("^" + sortBy, "i")
                         },
                         {
                             "country.countryName": RegExp("^" + sortBy, "i")
@@ -124,6 +133,7 @@ router.get("/dashboard/getData/page=:pageNumber/:sortBy", async (req, res) => {
             })
         }
         const users = await User.aggregate(aggregateQuery, { collation: { locale: "en", strength: 1 } })
+        console.log(users);
         res.send(users)
     }
     catch (err) {

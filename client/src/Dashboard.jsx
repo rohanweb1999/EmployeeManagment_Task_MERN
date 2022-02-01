@@ -2,6 +2,8 @@
 /**
  * @author Rohan Gajjar
  */
+
+//*******************************Load Module Start******************************* */
 import { React, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,21 +15,30 @@ import Stack from '@mui/material/Stack';
 import debounce from 'lodash.debounce';
 import { deleteSelectEmployee, fetchData, logoutUser } from "./actions";
 toast.configure()
+//*******************************Load Module End******************************* */
+
 
 const Dashboard = () => {
+
+    ///////////********Usestate***********************///////// */
     const [page, setpage] = useState(1)
     const [selectOption, setselectOption] = useState('ascending')
+
+
+    ///////////////UseSelector/////////////////////////////////
     const employeeList = useSelector(state => state.employeeReducer.employeeList)
 
     const dispatch = useDispatch();
 
-    ///////////////  fetchdata /////////////////////////////
+    /////////////// Useeffect for  fetchdata /////////////////////////////
     useEffect((e) => {
         dispatch(fetchData(page, selectOption))
     }, [page, selectOption, dispatch])
-    ///////////////  fetchdata /////////////////////////////
 
+
+    ///////////////  UseEffect for Dispatch delete function API /////////////////////////////
     const handleDelete = (id) => {
+        window.confirm("Confirm Delete User")
         dispatch(deleteSelectEmployee(id))
     }
     const onchangeChandler = event => {
@@ -52,8 +63,6 @@ const Dashboard = () => {
                 </div>
             </div>
             <div className="list-div" >
-
-
                 {
                     employeeList.map((element, index, country) => {
                         return (
