@@ -6,7 +6,6 @@ const Authenticate = async (req, res, next) => {
     try {
         //get cookie
         const token = req.cookies.jwtLogin;
-        console.log("token", token);
         //verify token 
         const verifyToken = jwt.verify(token, process.env.SECRET_KEY)
         //find the authenticateuser

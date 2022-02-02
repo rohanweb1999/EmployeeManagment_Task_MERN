@@ -77,8 +77,8 @@ form#basic {
 }
 img {
   border-style: none;
-  height: 400px;
-  width: 400px;
+  height: 500px;
+  width: 500px;
 }
 .main-div {
   display: flex;
@@ -89,10 +89,12 @@ img {
   margin: auto;
 }
 .Side-image {
-  padding-top: 250px;
+  margin-right: 200px;
+  width: 500px;
+  height: 500px;
+  margin-top: 250px;
   position: relative;
   animation: MoveUpDown 5s linear infinite;
-  padding-right: 200px;
 }
 @keyframes MoveUpDown {
   0%,

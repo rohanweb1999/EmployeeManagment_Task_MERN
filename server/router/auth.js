@@ -110,7 +110,7 @@ router.get("/dashboard/getData/page=:pageNumber/:sortBy", authenticate, async (r
                             "lastName": RegExp("^" + sortBy, "i")
                         },
                         {
-                            "contact": parseInt(sortBy)
+                            "contact": parseInt(sort)
                         },
                         {
                             "profession": RegExp("^" + sortBy, "i")
@@ -144,26 +144,15 @@ router.get("/dashboard/getData/page=:pageNumber/:sortBy", authenticate, async (r
 
 //register route
 router.post('/signUp', async (req, res) => {
-    const { userdata } = req.body;
 
     try {
-        //============================= User Exist =============================
-        const userExist = await User.findOne({ email: email });
 
-        if (userExist) {
-            return res.send("user already exist!");
-        }
-
-        else {
-            //============================= Save Register User =============================
-            await new User(userdata).save();
-            res.send("User Register Successfully!");
-
-        }
-    } catch (err) {
-        res.send("err" + err)
-
+        const result = await userData.save();
+        res.send((result))
     }
+    catch (err) {
+        res.send("error" + err)
+    };
 })
 
 //login route
