@@ -13,7 +13,7 @@ toast.configure()
 
 
 //******************************* */ Actions start *******************************************//
-export const fetchData = (pageNumber, selectOption, searchData) => {
+export const fetchData = (pageNumber, selectOption, searchUser) => {
 
     return (
         (dispatch) => {
@@ -67,6 +67,7 @@ export const getCities = (stateId) => {
 export const submitData = (userData) => {
     Axios.post('/signUp', userData)
         .then((res) => {
+            console.log("res", res.msg);
             toast.success("Registered Sucessfully", { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
         })
         .catch(err => {

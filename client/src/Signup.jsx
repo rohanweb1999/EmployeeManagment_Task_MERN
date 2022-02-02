@@ -21,7 +21,6 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getAllCountries, getCities, getState, submitData, updateSelectedUserdata } from "./actions";
 import * as Yup from 'yup'
-import TextError from './TextField'
 /////////////////////////////////////////////////////////////////////////////////////
 /******************Load module End ***********************************************/
 /////////////////////////////////////////////////////////////////////////////////////
@@ -41,7 +40,7 @@ const Signup = () => {
     ///////////////////////////////  UseState Start /////////////////////////////////////////
     const [editedData, seteditedData] = useState([])  //Here Edited Data store
     const [selectedCountryId, setselectedCountryId] = useState();  //user Selected  country Id
-    const [stateId, setStateId] = useState(''); // user Selected State Id
+    const [stateId, setStateId] = useState('') // user Selected State Id
     ///////////////////////////////  UseState End /////////////////////////////////////////
 
     ///////////////////////////////  UseSelector Start /////////////////////////////////////////
@@ -121,7 +120,7 @@ const Signup = () => {
             .min(10, "to short")
             .max(13, "to long"),
         profession: Yup.string()
-            .max(12, 'It Shoud be less than 12')
+            .max(30, 'It Shoud be less than 30')
             .required('Profession is Required'),
         salaryJan: Yup.number()
             .required('SalaryJan must be Required'),
@@ -163,7 +162,6 @@ const Signup = () => {
         initialValues,
         validationSchema,
         onSubmit: (values) => {
-            console.log("hello");
             //update the user data
             if (id) {
                 history.push('/dashboard')
@@ -173,7 +171,7 @@ const Signup = () => {
                 //add new user
                 if (values.password === values.confirmPassword) {
                     formik.handleReset()
-                    console.log("values", values);
+                    // console.log("values", values);
                     dispatch(submitData(values))
                     history.push('/signIn');
 
@@ -184,7 +182,6 @@ const Signup = () => {
             }
         }
     });
-    console.log(formik);
     return (
         <>
             <div className="main-div">
@@ -210,7 +207,6 @@ const Signup = () => {
                             </div>
                         </div>
                     ) : null}
-
                     <TextField
                         label="Last Name"
                         variant="standard"

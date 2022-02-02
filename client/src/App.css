@@ -77,8 +77,8 @@ form#basic {
 }
 img {
   border-style: none;
-  height: 700px;
-  width: 700px;
+  height: 400px;
+  width: 400px;
 }
 .main-div {
   display: flex;
@@ -89,7 +89,7 @@ img {
   margin: auto;
 }
 .Side-image {
-  padding-top: 50px;
+  padding-top: 250px;
   position: relative;
   animation: MoveUpDown 5s linear infinite;
   padding-right: 200px;
@@ -271,9 +271,6 @@ img {
 }
 .error {
   color: #ec2f16;
-}
-label {
-  font-size: 0.7rem;
 }
 
 input.form-control,

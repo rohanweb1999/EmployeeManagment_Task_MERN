@@ -17,7 +17,6 @@ import Signin from './Signin.jsx';
 import PagenotFound from './PagenotFound';
 import Navbar from './Navbar';
 import ProtectedRoute from './ProtectedRoute';
-import Signupform from './Signupform'
 
 //////////////////// Load module end /////////////////////////////////////////
 
