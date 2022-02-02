@@ -269,3 +269,20 @@ img {
 .countryClass {
   margin: 10px;
 }
+.error {
+  color: #ec2f16;
+}
+label {
+  font-size: 0.7rem;
+}
+
+input.form-control,
+input.form-control:focus {
+  background: #f0f0ff;
+}
+
+.error {
+  position: absolute;
+  color: red;
+  font-size: 0.6rem;
+}

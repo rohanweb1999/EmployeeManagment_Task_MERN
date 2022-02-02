@@ -12,7 +12,6 @@ import { loginContext } from './App.js'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { loginUserData } from './actions';
-import { LOGIN_USER } from './actions/Type';
 ////////////////////// Load module End //////////////////
 
 toast.configure()
