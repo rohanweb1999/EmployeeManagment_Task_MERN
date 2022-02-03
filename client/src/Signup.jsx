@@ -75,7 +75,7 @@ const Signup = () => {
             Axios.get(`/editUser/${id}`)
 
                 .then(res => {
-                    console.log("hello", res.data);
+                    console.log(res.data);
                     seteditedData(res.data);
                 })
                 .catch(err => {
@@ -128,12 +128,12 @@ const Signup = () => {
             .required('salaryFeb must be Required'),
         salaryMar: Yup.number()
             .required('salaryMar must be Required'),
-        // countryId: Yup.string()
-        //     .required('Please Select Country'),
-        // stateId: Yup.string()
-        //     .required('Please Select State'),
-        // city: Yup.string()
-        //     .required('Please Select city'),
+        countryId: Yup.string()
+            .required('Please Select Country'),
+        stateId: Yup.string()
+            .required('Please Select State'),
+        city: Yup.string()
+            .required('Please Select city'),
         password: Yup.string()
             .min(8, 'Password must be at least 8 charaters')
             .required('Password is required'),
@@ -171,9 +171,7 @@ const Signup = () => {
                 //add new user
                 if (values.password === values.confirmPassword) {
                     formik.handleReset()
-                    // console.log("values", values);
                     dispatch(submitData(values))
-                    history.push('/signIn');
 
                 } else {
                     toast.error("ConfirmPassword Not Match", { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
@@ -337,36 +335,62 @@ const Signup = () => {
                             </div>
                         </div>
                     ) : null}
+                    <br></br>
+                    <input type="number" placeholder="Total Salary" value={formik.values.salaryJan + formik.values.salaryFeb + formik.values.salaryMar} disabled></input>
+
                     <div className="DropDownMenu">
 
                         <div className="countryClass">
                             <select name="countryId"
-                                required
                                 onChange={(e) => handleCountryChange(e)}
 
                             >
                                 <option value="">Select Country</option>
                                 {data && data.map(element => <option value={element._id} key={element._id}>{element.countryName}</option>)}
-                            </select></div>
+                            </select>
+
+
+                            {formik.touched.countryId && formik.errors.countryId ? (
+                                <div className="fv-plugins-message-container">
+                                    <div className="fv-help-block error">
+                                        {formik.errors.countryId}
+                                    </div>
+                                </div>
+                            ) : null}
+                        </div>
+
 
                         <div className="countryClass">
                             <select name="stateId"
-                                required
                                 onChange={(e) => handleStateChange(e)}>
                                 <option value="">Select State</option>
 
                                 {newState && newState.map(element => <option value={formik.values.stateId = element._id} key={element._id}>{element.stateName}</option>)}
-                            </select></div>
+                            </select>
+                            {formik.touched.stateId && formik.errors.stateId ? (
+                                <div className="fv-plugins-message-container">
+                                    <div className="fv-help-block error">
+                                        {formik.errors.stateId}
+                                    </div>
+                                </div>
+                            ) : null}</div>
 
                         <div className="countryClass">
-                            <select name="cityId" required>
+                            <select name="cityId">
                                 <option value="">Select City</option>
 
                                 {newcities && newcities.map(element => <option value={formik.values.cityId = element._id} key={element.cityName}>{element.cityName}</option>)}
-                            </select></div>
+                            </select>
+                            {formik.touched.cityId && formik.errors.cityId ? (
+                                <div className="fv-plugins-message-container">
+                                    <div className="fv-help-block error">
+                                        {formik.errors.cityId}
+                                    </div>
+                                </div>
+                            ) : null}</div>
 
                     </div>
-
+                    <br></br>
                     <TextField
                         label="Password"
                         variant="standard"

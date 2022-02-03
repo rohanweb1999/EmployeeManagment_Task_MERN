@@ -13,7 +13,7 @@ import 'animate.css';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import debounce from 'lodash.debounce';
-import { deleteSelectEmployee, fetchData, logoutUser } from "./actions";
+import { deleteSelectEmployee, fetchData } from "./actions";
 toast.configure()
 //*******************************Load Module End******************************* */
 
@@ -21,19 +21,22 @@ toast.configure()
 const Dashboard = () => {
 
     ///////////********Usestate***********************///////// */
-    const [page, setpage] = useState(1)
+    const [pageNumber, setpageNumber] = useState(1)
     const [selectOption, setselectOption] = useState("ascending")
+    const [request, setRequest] = useState("")
+
 
 
     ///////////////UseSelector/////////////////////////////////
     const employeeList = useSelector(state => state.employeeReducer.employeeList)
+    const page = useSelector(state => state.employeeReducer.page)
 
     const dispatch = useDispatch();
 
     /////////////// Useeffect for  fetchdata /////////////////////////////
     useEffect((e) => {
-        dispatch(fetchData(page, selectOption))
-    }, [page, selectOption, dispatch])
+        dispatch(fetchData(pageNumber, selectOption, request))
+    }, [pageNumber, selectOption, request, dispatch])
 
 
     ///////////////  UseEffect for Dispatch delete function API /////////////////////////////
@@ -42,7 +45,7 @@ const Dashboard = () => {
         dispatch(deleteSelectEmployee(id))
     }
     const onchangeChandler = event => {
-        setselectOption(event.target.value)
+        setRequest(event.target.value)
     }
     const debouncedOnChange = debounce(onchangeChandler, 500)
     return (
@@ -67,7 +70,7 @@ const Dashboard = () => {
                     <>
                         <div className="list-div" >
                             {
-                                employeeList.map((element, index, country) => {
+                                employeeList.map((element) => {
                                     return (
                                         <>
                                             <div className="employeeData" key={element._id}>
@@ -137,9 +140,9 @@ const Dashboard = () => {
                         </div>
                         <div className="pagination" >
 
-                            <Stack spacing={2} >
-                                <Pagination count={5} color="secondary" onChange={(e, value) => setpage(value)} />
-                            </Stack>
+                            <Pagination count={page} variant="outlined" color="secondary" onChange={(e, value) => {
+                                setpageNumber(value)
+                            }} />
 
                         </div>
                     </>

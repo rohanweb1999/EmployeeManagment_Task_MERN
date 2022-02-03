@@ -57,17 +57,33 @@ router.get("/getcities/:stateId", async (req, res) => {
     }
 })
 
-router.get("/dashboard/getData/page=:pageNumber/:sortBy", authenticate, async (req, res) => {
-    const { pageNumber, sortBy } = req.params
-    let size = 4
+router.get('/getUser', authenticate, async (req, res) => {
     try {
-        aggregateQuery = [
+
+        let { Page, Sort, Request } = req.query;
+        let limit = 4;
+        let skip = (Page - 1) * limit;
+        const total = await User.countDocuments({}); // count total Documents
+
+        let totalPage = Math.ceil(total / limit); // count Total page
+
+
+        let aggregateQuery = []; //Aggreagte Array
+
+        aggregateQuery.push(
+            {
+                $addFields: {
+                    totalSalary: {
+                        $add: ["$salaryJan", "$salaryFeb", "$salaryMar"]
+                    }
+                }
+            },
             {
                 $lookup: {
-                    from: "countries", //collection to join
-                    localField: "countryId", //field from the input doc
-                    foreignField: "_id", //field from the document of 'from collection'
-                    as: "country" //output array field                        
+                    from: "countries",
+                    localField: "countryId",
+                    foreignField: "_id",
+                    as: "country"
                 }
             },
             {
@@ -78,7 +94,6 @@ router.get("/dashboard/getData/page=:pageNumber/:sortBy", authenticate, async (r
                     as: "state"
                 }
             },
-
             {
                 $lookup: {
                     from: "cities",
@@ -86,69 +101,79 @@ router.get("/dashboard/getData/page=:pageNumber/:sortBy", authenticate, async (r
                     foreignField: "_id",
                     as: "city"
                 }
-            }
-        ]
+            },
+        )
 
-
-
-        if (pageNumber) {
-            aggregateQuery.push({ $skip: (pageNumber - 1) * size },
-                { $limit: parseInt(size) })
-        }
-        if (sortBy === 'ascending' || sortBy === 'descending') {
-            console.log("ascending")
-            aggregateQuery.push({ "$sort": { "firstName": sortBy === "ascending" ? 1 : -1 } },)
-        } else {
-            aggregateQuery.push({
-                $match: {
-                    $or: [
-
-                        {
-                            "firstName": RegExp("^" + sortBy, "i")
-                        },
-                        {
-                            "lastName": RegExp("^" + sortBy, "i")
-                        },
-                        {
-                            "contact": parseInt(sort)
-                        },
-                        {
-                            "profession": RegExp("^" + sortBy, "i")
-                        },
-                        {
-                            "email": RegExp("^" + sortBy, "i")
-                        },
-                        {
-                            "country.countryName": RegExp("^" + sortBy, "i")
-                        },
-                        {
-                            "state.stateName": RegExp("^" + sortBy, "i")
-                        },
-                        {
-                            "city.cityName": RegExp("^" + sortBy, "i")
-                        }
-                    ]
+        if (Request === "") {
+            aggregateQuery.push(
+                { $sort: { firstName: Sort === "descending" ? -1 : 1 } },
+                {
+                    $skip: skip
+                },
+                {
+                    $limit: limit
                 }
+            )
+            const users = await User.aggregate([aggregateQuery]);
 
-            })
+            res.send({ users, totalPage });
+
         }
-        const users = await User.aggregate(aggregateQuery, { collation: { locale: "en", strength: 1 } })
-        res.send(users)
+
+        else if (Request !== "") {
+            const searchUser = Request;
+            console.log(searchUser)
+            aggregateQuery.push(
+                {
+                    $match: {
+                        $or: [
+                            { firstName: RegExp("^" + searchUser, 'i') },
+                            { lastName: RegExp("^" + searchUser, 'i') },
+                            { profession: RegExp("^" + searchUser, 'i') },
+                            { company: RegExp("^" + searchUser, 'i') },
+                            { email: RegExp("^" + searchUser, 'i') },
+                            { contact: parseInt(searchUser) },
+                            { "country.countryName": RegExp("^" + searchUser, 'i') },
+                            { "state.stateName": RegExp("^" + searchUser, 'i') },
+                            { "city.cityName": RegExp("^" + searchUser, 'i') }
+                        ]
+                    }
+                },
+                { $sort: { firstName: Sort === "descending" ? -1 : 1 } },
+
+                {
+                    $skip: skip
+                },
+                {
+                    $limit: limit
+                }
+            )
+            const users = await User.aggregate([aggregateQuery]);
+            let totalPage = Math.ceil(users.length / limit);
+            res.send({ users, totalPage });
+        }
     }
     catch (err) {
-        res.send("error" + err);
+        res.status(500).send(err);
     }
 });
 
 
 
+
 //register route
 router.post('/signUp', async (req, res) => {
-
+    const userData = req.body
     try {
+        const userExist = await User.findOne({ email: userData.email })
+        if (userExist) {
+            res.send("user Already Exist")
+        } else {
+            const result = await User(userData).save();
+            res.send("Register Sucessfuly")
 
-        const result = await userData.save();
-        res.send((result))
+        }
+
     }
     catch (err) {
         res.send("error" + err)
@@ -186,7 +211,31 @@ router.post('/signIn', async (req, res) => {
 router.get('/editUser/:id', async (req, res) => {
 
     try {
-
+        aggregateQuery = []
+        aggregateQuery.push({
+            $lookup: {
+                from: "countries",
+                localField: "countryId",
+                foreignField: "_id",
+                as: "country"
+            }
+        },
+            {
+                $lookup: {
+                    from: "states",
+                    localField: "stateId",
+                    foreignField: "_id",
+                    as: "state"
+                }
+            },
+            {
+                $lookup: {
+                    from: "cities",
+                    localField: "cityId",
+                    foreignField: "_id",
+                    as: "city"
+                }
+            })
         const user = await User.findById(req.params.id)
         res.send(user)
     }
@@ -213,7 +262,7 @@ router.delete('/deleteUser/:id', async (req, res) => {
 
     try {
         const user = await User.findByIdAndRemove(req.params.id);
-        res.send(user)
+        res.send("Delete Record")
     }
     catch (err) {
         res.send("error" + err)

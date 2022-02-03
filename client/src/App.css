@@ -140,7 +140,7 @@ img {
   margin-left: 15px;
 }
 .logout-btn {
-  background-color: #6e64f5; /* Green */
+  background-color: #f56464; /* Green */
   border: none;
   color: white;
   padding: 10px 16px;
@@ -155,8 +155,7 @@ img {
   margin-left: 15px;
 }
 .logout-btn:hover {
-  /* box-shadow: 0 6px 8px 0 rgba(156, 152, 129, 0.24),
-    0 17px 50px 0 rgba(0, 0, 0, 0.19); */
+  box-shadow: 0 6px 8px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
   background-color: #ec2f16;
 }
 .dash-btn {

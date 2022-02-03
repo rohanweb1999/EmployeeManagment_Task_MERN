@@ -9,6 +9,7 @@ const initialState = {
     data: [],
     newState: [],
     newcities: [],
+    page: [],
     loginStatus: false
 
 }
@@ -16,7 +17,7 @@ const initialState = {
 const employeeReducer = (state = initialState, action) => {
     switch (action.type) {
 
-        case GET_DATA: return { ...state, employeeList: action.payload }
+        case GET_DATA: return { ...state, employeeList: action.payload.users, page: action.payload.totalPage }
 
         case GET_ALL_COUNTRY: return { ...state, data: action.payload }
 
@@ -33,8 +34,8 @@ const employeeReducer = (state = initialState, action) => {
             return {
                 employeeList: [...state.employeeList, action.userData]
             }
-        case LOGIN_USER: console.log("hello Login USer"); return { ...state, loginStatus: true }
-        case LOGOUT_USER: console.log("hello"); return { ...state, employeeList: [] }
+        case LOGIN_USER: return { ...state, loginStatus: true }
+        case LOGOUT_USER: return { ...state, employeeList: [] }
 
         default:
             return state;

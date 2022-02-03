@@ -28,6 +28,7 @@ const Signin = () => {
 
         onSubmit: (values) => {
             history.push("/dashboard")
+            localStorage.setItem("loginEmail", values)
             dispatch(loginUserData(values))
         }
     })

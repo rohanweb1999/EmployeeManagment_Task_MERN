@@ -2,7 +2,7 @@
  * @author Rohan Gajjar
  */
 ////////////////    start load Modules //////////////////////////////////////
-import { DELETE_SELECT_EMPLOYEE, GET_ALL_COUNTRY, GET_CITIES, GET_DATA, GET_STATE, LOGIN_USER, LOGOUTUSR, LOGOUT_USER, SELECT_EDIT_LIST, SERCH_USER_DATA, SUBMIT_DATA, UPDATE_SELECTED_USERDATA } from "../actions/Type"
+import { DELETE_SELECT_EMPLOYEE, GET_ALL_COUNTRY, GET_CITIES, GET_DATA, GET_STATE, LOGOUT_USER, SELECT_EDIT_LIST, SERCH_USER_DATA, SUBMIT_DATA, UPDATE_SELECTED_USERDATA } from "../actions/Type"
 import Axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -17,7 +17,7 @@ export const fetchData = (pageNumber, selectOption, searchUser) => {
 
     return (
         (dispatch) => {
-            Axios.get(`/dashboard/getData/page=${pageNumber}/${selectOption}`)
+            Axios.get(`/getUser/?Page=${pageNumber}&Sort=${selectOption}&Request=${searchUser}`)
                 .then((res) => {
                     const data = res.data
                     dispatch({ type: GET_DATA, payload: data })
@@ -65,10 +65,18 @@ export const getCities = (stateId) => {
 }
 
 export const submitData = (userData) => {
+
     Axios.post('/signUp', userData)
         .then((res) => {
-            console.log("res", res.msg);
-            toast.success("Registered Sucessfully", { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
+            const result = res.data
+            console.log(result);
+            if (result === "user Already Exist") {
+                toast.error(result, { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
+
+            } else {
+                toast.success(result, { position: toast.POSITION.TOP_CENTER, autoClose: 2000 });
+
+            }
         })
         .catch(err => {
             toast.error("Invalid Registration", { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
@@ -92,14 +100,7 @@ export const deleteSelectEmployee = (id) => {
         id,
     }
 }
-// export const searchInputData = (data) => {
-//     // axios.get(`http://localhost:3001/getEmployee?name='xyz'&salary='500'`)
-//     // axios.post(`http://localhost:3001/getEmployee`, {name: 'xyz', salary: '500'})
-//     return {
-//         type: SERCH_USER_DATA,
-//         data
-//     }
-// }
+
 export const selectEditList = (id) => {
     return {
         type: SELECT_EDIT_LIST,
