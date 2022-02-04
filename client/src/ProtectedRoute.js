@@ -1,24 +1,30 @@
 /**
  * @author Rohan Gajjar
  */
-
-
-
 //////////////// Load module start ///////////////////////
 import React from 'react'
-import { Route, Redirect } from 'react-router-dom'
-/////////////// Load module End //////////////////////////
+import { useSelector } from 'react-redux';
+import { Route, Redirect } from 'react-router-dom';
 
-const ProtectedRoute = ({ auth, component: Component, ...rest }) => {
+//protected route
+//authstate: authenticate state
+//component: componenet connected with route
+//...rest: rest of the properties
+const ProtectedRoute = ({ authStatus, component: Component, ...rest }) => {
+    const loginStatus = useSelector(state => state.employeeReducer.loginStatus)
+
     return (
         <>
             <Route {...rest} render={(props) => {
-                if (auth) return <Component {...props} />;
-                if (!auth) return <Redirect to={{ path: "/signin", state: { from: props.location } }} />
-            }}
-            />
+                if (loginStatus !== true) {
+                    return <Component {...props} />;
+                }
+                else {
+                    return <Redirect to='/Dashboard' />;
+                }
+            }} />
         </>
     )
 }
 
-export default ProtectedRoute
+export default ProtectedRoute;

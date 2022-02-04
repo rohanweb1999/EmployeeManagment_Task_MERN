@@ -2,7 +2,7 @@
   "name": "login_task",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:5000",
+  "proxy": "http://localhost:6000",
   "dependencies": {
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
@@ -24,6 +24,7 @@
     "nodemon": "^2.0.15",
     "query-string": "^7.0.1",
     "react": "^17.0.2",
+    "react-confirm-bootstrap": "^5.3.1",
     "react-cookie": "^4.1.1",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.21.0",
@@ -31,6 +32,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "react-toastify": "^8.1.0",
+    "redux": "^4.1.2",
     "redux-thunk": "^2.4.1",
     "web-vitals": "^1.1.2",
     "yup": "^0.32.11"

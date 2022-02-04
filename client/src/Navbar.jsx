@@ -15,6 +15,10 @@ import { logoutUser } from "./actions";
 
 
 const Navbar = () => {
+
+    const loginAuthenticateUser = useSelector(state => state.employeeReducer.loginAuthenticateUser)
+
+
     const [cookieStatus, setcookieStatus] = useState('')
     useEffect((e) => {
         const cookie = Cookies.get('jwtLogin')
@@ -39,7 +43,10 @@ const Navbar = () => {
     return (
         <div className="navbar">
             <div className="items">
-                <NavLink to="/" id="Logo" onClick={home}><h1>WELCOME</h1></NavLink>
+                <span>
+                    <NavLink to="/" id="Logo" onClick={home}><h1>WELCOME {loginAuthenticateUser ? `${loginAuthenticateUser.firstName} ${loginAuthenticateUser.lastName}` : null}</h1></NavLink>
+                    <div><h4>{loginAuthenticateUser ? `You are signed in as ${loginAuthenticateUser.email}` : null}</h4></div>
+                </span>
                 {
                     cookieStatus ? <div className="itemsNav2">
                         <NavLink to="/Signup" id="btn2" ><button className='reg-btn' onClick={registration}>Registration</button></NavLink>

@@ -61,14 +61,12 @@ router.get('/getUser', authenticate, async (req, res) => {
     try {
 
         let { Page, Sort, Request } = req.query;
-        let limit = 4;
+        let limit = 2;
         let skip = (Page - 1) * limit;
-        const total = await User.countDocuments({}); // count total Documents
+        const loginAuthenticateUser = req.authenticateUser
+        let loginstate = true
 
-        let totalPage = Math.ceil(total / limit); // count Total page
-
-
-        let aggregateQuery = []; //Aggreagte Array
+        let aggregateQuery = [];
 
         aggregateQuery.push(
             {
@@ -104,41 +102,52 @@ router.get('/getUser', authenticate, async (req, res) => {
             },
         )
 
-        if (Request === "") {
-            aggregateQuery.push(
-                { $sort: { firstName: Sort === "descending" ? -1 : 1 } },
-                {
-                    $skip: skip
-                },
-                {
-                    $limit: limit
-                }
-            )
-            const users = await User.aggregate([aggregateQuery]);
+        if (Request !== "") {
 
-            res.send({ users, totalPage });
-
-        }
-
-        else if (Request !== "") {
-            const searchUser = Request;
-            console.log(searchUser)
             aggregateQuery.push(
                 {
                     $match: {
                         $or: [
-                            { firstName: RegExp("^" + searchUser, 'i') },
-                            { lastName: RegExp("^" + searchUser, 'i') },
-                            { profession: RegExp("^" + searchUser, 'i') },
-                            { company: RegExp("^" + searchUser, 'i') },
-                            { email: RegExp("^" + searchUser, 'i') },
-                            { contact: parseInt(searchUser) },
-                            { "country.countryName": RegExp("^" + searchUser, 'i') },
-                            { "state.stateName": RegExp("^" + searchUser, 'i') },
-                            { "city.cityName": RegExp("^" + searchUser, 'i') }
+                            { firstName: RegExp("^" + Request, 'i') },
+                            { lastName: RegExp("^" + Request, 'i') },
+                            { profession: RegExp("^" + Request, 'i') },
+                            { email: RegExp("^" + Request, 'i') },
+                            { contact: parseInt(Request) },
+                            { "country.countryName": RegExp("^" + Request, 'i') },
+                            { "state.stateName": RegExp("^" + Request, 'i') },
+                            { "city.cityName": RegExp("^" + Request, 'i') }
                         ]
                     }
                 },
+            )
+
+            const matchUser = await User.aggregate([aggregateQuery]);
+
+            let totalPage = Math.ceil(matchUser.length / limit);
+
+            aggregateQuery.push(
+                { $sort: { firstName: Sort === "ascending" ? -1 : 1 } },
+
+                {
+                    $skip: skip
+                },
+                {
+                    $limit: limit
+                }
+
+            )
+
+            const users = await User.aggregate([aggregateQuery])
+            res.send({ users, totalPage, loginAuthenticateUser, loginstate });
+        }
+        else if (Request === "") {
+
+            const total = await User.countDocuments({});
+
+            let totalPage = Math.ceil(total / limit);
+
+            aggregateQuery.push(
+
                 { $sort: { firstName: Sort === "descending" ? -1 : 1 } },
 
                 {
@@ -149,15 +158,16 @@ router.get('/getUser', authenticate, async (req, res) => {
                 }
             )
             const users = await User.aggregate([aggregateQuery]);
-            let totalPage = Math.ceil(users.length / limit);
-            res.send({ users, totalPage });
+
+            res.send({ users, totalPage, loginAuthenticateUser, loginstate });
         }
+
     }
     catch (err) {
         res.status(500).send(err);
+        console.log(err)
     }
 });
-
 
 
 
@@ -199,7 +209,8 @@ router.post('/signIn', async (req, res) => {
             res.cookie("jwtLogin", token, {
                 expires: new Date(Date.now() + 3600000)
             });
-            res.send({ message: "User Login Successfully!" });
+            let loginstate = true
+            res.send({ msg: "Login Sucessfully", loginstate });
         }
 
     } catch (err) {
@@ -209,34 +220,10 @@ router.post('/signIn', async (req, res) => {
 
 //get user for edit
 router.get('/editUser/:id', async (req, res) => {
+    const id = req.params.id
 
     try {
-        aggregateQuery = []
-        aggregateQuery.push({
-            $lookup: {
-                from: "countries",
-                localField: "countryId",
-                foreignField: "_id",
-                as: "country"
-            }
-        },
-            {
-                $lookup: {
-                    from: "states",
-                    localField: "stateId",
-                    foreignField: "_id",
-                    as: "state"
-                }
-            },
-            {
-                $lookup: {
-                    from: "cities",
-                    localField: "cityId",
-                    foreignField: "_id",
-                    as: "city"
-                }
-            })
-        const user = await User.findById(req.params.id)
+        const user = await User.findById(id)
         res.send(user)
     }
     catch (err) {
@@ -245,12 +232,43 @@ router.get('/editUser/:id', async (req, res) => {
 });
 
 //update user
-router.put('/updateUser/:id', async (req, res) => {
+router.put('/updateUser/:id/:email', async (req, res) => {
     try {
         let id = req.params.id;
+        let email = req.params.email;
         let updatedValue = req.body
-        const result = await User.findByIdAndUpdate(id, updatedValue)
-        res.send(result);
+        if (updatedValue.email !== email) {
+            const emailExist = await User.findOne({ email: updatedValue.email });
+
+            if (emailExist) {
+                return res.send({ msg: "This Email is already taken" });
+            }
+            else {
+                //============================= Save Employee Updated Details =============================
+                await User.findByIdAndUpdate(id, updatedValue,
+                    {
+                        new: false
+                    },
+                );
+
+                //============================= Send Response =============================
+                res.json({ msg: "Employee Updated Sucessfully!" })
+            }
+        }
+        else {
+
+            //============================= Save Employee Updated Details =============================
+            await User.findByIdAndUpdate(id, updatedValue,
+                {
+                    new: false
+                },
+            );
+
+            //============================= Send Response =============================
+            res.json({ msg: "Employee Updated Sucessfully!" })
+        }
+
+
     }
     catch (err) {
         res.send("error" + err)
@@ -258,13 +276,19 @@ router.put('/updateUser/:id', async (req, res) => {
 });
 
 //delete user
-router.delete('/deleteUser/:id', async (req, res) => {
-
+router.delete('/deleteUser/:email', authenticate, async (req, res) => {
+    console.log(req.params.email);
+    console.log(req.authenticateUser.email);
     try {
-        const user = await User.findByIdAndRemove(req.params.id);
-        res.send("Delete Record")
+        if (req.authenticateUser.email === req.params.email) {
+            res.clearCookie("jwtLogin");
+        }
+        const result = await User.findOneAndDelete({ email: req.params.email });
+        console.log("result", result);
+        res.send("deleted")
     }
     catch (err) {
+        console.log("error" + err);
         res.send("error" + err)
     };
 });

@@ -76,9 +76,6 @@ const Signin = () => {
                     </form>
                 </div>
             </div>
-            <div className="sign_div">
-                <NavLink to="/signUp">Create an account</NavLink>
-            </div>
         </>
     )
 }

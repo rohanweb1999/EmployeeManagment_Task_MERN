@@ -17,19 +17,20 @@ import Signin from './Signin.jsx';
 import PagenotFound from './PagenotFound';
 import Navbar from './Navbar';
 import ProtectedRoute from './ProtectedRoute';
+import { useSelector } from 'react-redux';
 
 //////////////////// Load module end /////////////////////////////////////////
 
 
+
 export const loginContext = createContext();
 const App = () => {
-
-
+  const loginStatus = useSelector(state => state.employeeReducer.loginStatus)
+  console.log(loginStatus);
   return (
     <>
       <Router>
         <Navbar />
-
         <Switch>
           <Route exact path="/"  ><Home></Home></Route>
           <Route path="/signUp"><Signup></Signup></Route>
@@ -39,7 +40,6 @@ const App = () => {
           <ProtectedRoute path="/dashboard" ><Dashboard></Dashboard></ProtectedRoute>
           <Route path="*"  ><PagenotFound></PagenotFound></Route>
         </Switch>
-
       </Router>
     </>
   )

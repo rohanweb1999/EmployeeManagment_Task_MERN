@@ -44,11 +44,15 @@ const Signup = () => {
     ///////////////////////////////  UseState End /////////////////////////////////////////
 
     ///////////////////////////////  UseSelector Start /////////////////////////////////////////
+    const employeeList = useSelector(state => state.employeeReducer.employeeList)
     const data = useSelector((state) => state.employeeReducer.data);
     const newState = useSelector((state) => state.employeeReducer.newState);
     const newcities = useSelector((state) => state.employeeReducer.newcities);
-    ///////////////////////////////  UseSelector End /////////////////////////////////////////
+    const emailExist = useSelector((state) => state.employeeReducer.emailExist);
 
+
+    ///////////////////////////////  UseSelector End /////////////////////////////////////////
+    console.log("emailExist", emailExist);
 
     ///////////////////////////////  UseEffect Start /////////////////////////////////////////
     useEffect(() => {
@@ -72,23 +76,29 @@ const Signup = () => {
     //for getting the edited user data
     useEffect(() => {
         if (id) {
-            Axios.get(`/editUser/${id}`)
 
-                .then(res => {
-                    console.log(res.data);
-                    seteditedData(res.data);
-                })
-                .catch(err => {
-                    console.log("error: " + err);
-                })
+            seteditedData(editUser)
+            // Axios.get(`/editUser/${id}`)
+
+            //     .then(res => {
+            //         seteditedData(res.data[0]);
+            //     })
+            //     .catch(err => {
+            //         console.log("error: " + err);
+            //     })
         }
     }, [id]);
+    const editUser = employeeList.find((ele) => ele._id === id ? ele : null);
+    const countryEdit = editUser && editUser.country.map(item => item.countryName)
+    const stateEdit = editUser && editUser.state.map(item => item.stateName)
+    const cityEdit = editUser && editUser.city.map(item => item.cityName)
 
 
     //set inputfield when editedData state changed
     useEffect(() => {
         if (id && editedData) {
             formik.setValues(editedData)
+
         } else {
             Cookies.remove('jwtLogin')
         }
@@ -102,7 +112,15 @@ const Signup = () => {
         setselectedCountryId(e.target.value)
     }
 
-    const handleStateChange = (e) => { setStateId(e.target.value) }
+    const handleStateChange = (e) => {
+        formik.values.stateId = e.target.value
+
+        setStateId(e.target.value)
+    }
+    const handleCityChange = (e) => {
+        formik.values.cityId = e.target.value
+
+    }
     ////////////////// HandleChange Events End //////////////////////////////
 
     const validationSchema = Yup.object().shape({
@@ -128,12 +146,12 @@ const Signup = () => {
             .required('salaryFeb must be Required'),
         salaryMar: Yup.number()
             .required('salaryMar must be Required'),
-        countryId: Yup.string()
-            .required('Please Select Country'),
-        stateId: Yup.string()
-            .required('Please Select State'),
-        city: Yup.string()
-            .required('Please Select city'),
+        // countryId: Yup.string()
+        //     .required('Please Select Country'),
+        // stateId: Yup.string()
+        //     .required('Please Select State'),
+        // city: Yup.string()
+        //     .required('Please Select city'),
         password: Yup.string()
             .min(8, 'Password must be at least 8 charaters')
             .required('Password is required'),
@@ -164,12 +182,22 @@ const Signup = () => {
         onSubmit: (values) => {
             //update the user data
             if (id) {
-                history.push('/dashboard')
-                dispatch(updateSelectedUserdata(id, values))
+                dispatch(updateSelectedUserdata(id, values, editedData.email))
+
+                if (emailExist === "This Email is already taken") {
+                    toast.error(emailExist, { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
+                } else {
+                    history.push('/dashboard')
+                    toast.success(emailExist, { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
+                    dispatch(updateSelectedUserdata(id, values, editedData.email))
+
+                }
+
             }
             else {
                 //add new user
                 if (values.password === values.confirmPassword) {
+                    console.log(values);
                     formik.handleReset()
                     dispatch(submitData(values))
 
@@ -194,7 +222,7 @@ const Signup = () => {
                         name="firstName"
                         type="text"
                         required
-                        onChange={formik.handleChange}
+                        // onChange={formik.handleChange}
                         // value={formik.values.firstName}
                         {...formik.getFieldProps("firstName")}
                     />
@@ -212,7 +240,7 @@ const Signup = () => {
                         type="text"
 
                         required
-                        onChange={formik.handleChange}
+                        // onChange={formik.handleChange}
                         // value={formik.values.lastName}
                         {...formik.getFieldProps("lastName")}
                     />
@@ -231,7 +259,7 @@ const Signup = () => {
                         type="email"
 
                         required
-                        onChange={formik.handleChange}
+                        // onChange={formik.handleChange}
                         // value={formik.values.email}
                         {...formik.getFieldProps("email")}
                     />
@@ -249,7 +277,7 @@ const Signup = () => {
                         name="contact"
                         type="number"
                         required
-                        onChange={formik.handleChange}
+                        // onChange={formik.handleChange}
                         // value={formik.values.contact}
                         {...formik.getFieldProps("contact")}
                     />
@@ -267,7 +295,7 @@ const Signup = () => {
                         name="profession"
                         type="text"
                         required
-                        onChange={formik.handleChange}
+                        // onChange={formik.handleChange}
                         // value={formik.values.profession}
                         {...formik.getFieldProps("profession")}
 
@@ -286,7 +314,7 @@ const Signup = () => {
                         name="salaryJan"
                         type="number"
                         required
-                        onChange={formik.handleChange}
+                        // onChange={formik.handleChange}
                         // value={formik.values.salaryJan}
                         {...formik.getFieldProps("salaryJan")}
 
@@ -305,7 +333,7 @@ const Signup = () => {
                         name="salaryFeb"
                         type="number"
                         required
-                        onChange={formik.handleChange}
+                        // onChange={formik.handleChange}
                         // value={formik.values.salaryFeb}
                         {...formik.getFieldProps("salaryFeb")}
 
@@ -323,7 +351,7 @@ const Signup = () => {
                         name="salaryMar"
                         type="number"
                         required
-                        onChange={formik.handleChange}
+                        // onChange={formik.handleChange}
                         // value={formik.values.salaryMar}
                         {...formik.getFieldProps("salaryMar")}
 
@@ -345,7 +373,7 @@ const Signup = () => {
                                 onChange={(e) => handleCountryChange(e)}
 
                             >
-                                <option value="">Select Country</option>
+                                <option >{countryEdit ? countryEdit : "select Country"}</option>
                                 {data && data.map(element => <option value={element._id} key={element._id}>{element.countryName}</option>)}
                             </select>
 
@@ -363,9 +391,9 @@ const Signup = () => {
                         <div className="countryClass">
                             <select name="stateId"
                                 onChange={(e) => handleStateChange(e)}>
-                                <option value="">Select State</option>
+                                <option value="">{stateEdit ? stateEdit : "select state"}</option>
 
-                                {newState && newState.map(element => <option value={formik.values.stateId = element._id} key={element._id}>{element.stateName}</option>)}
+                                {newState && newState.map(element => <option value={element._id} key={element._id}>{element.stateName}</option>)}
                             </select>
                             {formik.touched.stateId && formik.errors.stateId ? (
                                 <div className="fv-plugins-message-container">
@@ -376,10 +404,10 @@ const Signup = () => {
                             ) : null}</div>
 
                         <div className="countryClass">
-                            <select name="cityId">
-                                <option value="">Select City</option>
+                            <select name="cityId" onChange={(e) => handleCityChange(e)}>
+                                <option value="">{cityEdit ? cityEdit : "select city"}</option>
 
-                                {newcities && newcities.map(element => <option value={formik.values.cityId = element._id} key={element.cityName}>{element.cityName}</option>)}
+                                {newcities && newcities.map(element => <option value={element._id} key={element.cityName}>{element.cityName}</option>)}
                             </select>
                             {formik.touched.cityId && formik.errors.cityId ? (
                                 <div className="fv-plugins-message-container">

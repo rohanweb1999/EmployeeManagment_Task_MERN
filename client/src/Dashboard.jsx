@@ -11,9 +11,9 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'animate.css';
 import Pagination from '@mui/material/Pagination';
-import Stack from '@mui/material/Stack';
 import debounce from 'lodash.debounce';
 import { deleteSelectEmployee, fetchData } from "./actions";
+
 toast.configure()
 //*******************************Load Module End******************************* */
 
@@ -24,10 +24,8 @@ const Dashboard = () => {
     const [pageNumber, setpageNumber] = useState(1)
     const [selectOption, setselectOption] = useState("ascending")
     const [request, setRequest] = useState("")
-
-
-
     ///////////////UseSelector/////////////////////////////////
+
     const employeeList = useSelector(state => state.employeeReducer.employeeList)
     const page = useSelector(state => state.employeeReducer.page)
 
@@ -41,8 +39,11 @@ const Dashboard = () => {
 
     ///////////////  UseEffect for Dispatch delete function API /////////////////////////////
     const handleDelete = (id) => {
-        window.confirm("Confirm Delete User")
-        dispatch(deleteSelectEmployee(id))
+
+        if (window.confirm("Confirm Delete User")) {
+            dispatch(deleteSelectEmployee(id))
+        }
+
     }
     const onchangeChandler = event => {
         setRequest(event.target.value)
@@ -50,6 +51,7 @@ const Dashboard = () => {
     const debouncedOnChange = debounce(onchangeChandler, 500)
     return (
         <>        <div className="das-main-div">
+
             <div className="das-sub-div">
                 <input onChange={debouncedOnChange} placeholder="Search Employee..." />
             </div>
@@ -62,7 +64,6 @@ const Dashboard = () => {
                         <option value="descending" >Z-A</option>
 
                     </select>
-
                 </div>
             </div>
             {
@@ -128,7 +129,7 @@ const Dashboard = () => {
                                                     <NavLink to={`/editUser/:?id=${element._id}`}>
                                                         <button>Edit</button>
                                                     </NavLink>
-                                                    <button onClick={() => handleDelete(element._id)}>Delete</button>
+                                                    <button onClick={() => handleDelete(element.email)}>Delete</button>
                                                 </div>
                                             </div>
                                         </>
