@@ -80,17 +80,16 @@ export const submitData = (userData) => {
         })
         .catch(err => {
             toast.error("Invalid Registration", { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
+
         })
     return {
-        type: SUBMIT_DATA,
-        userData
+        type: SUBMIT_DATA
     }
 }
 export const deleteSelectEmployee = (id) => {
     Axios.delete(`/deleteUser/${id}`)
         .then(() => {
             toast.warning("Record deleted", { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
-            window.location.reload()
         })
         .catch(err => {
             console.log("error" + err);
@@ -112,33 +111,38 @@ export const updateSelectedUserdata = (id, data, email) => {
         (dispatch) => {
             Axios.put(`/updateUser/${id}/${email}`, data)
                 .then((res) => {
-                    const error = res.data
-                    dispatch({ type: UPDATE_USER, payload: error })
+                    toast.success("Data Update Successfully", { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
+
+                    dispatch({ type: UPDATE_USER })
+                })
+                .catch(err => {
+                    toast.error("Email already exist", { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
+
                 })
         }
     )
 }
 
 export const loginUserData = (data) => {
-    Axios.post(`/signIn`, data)
-        .then((res) => {
-            console.log("hello");
-            const result = res.data
-            console.log(result)
-            window.location.reload()
-            toast.success('Login successfully', { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
-        })
-        .catch(err => {
-            console.log("error" + err);
-        })
+    return (dispatch) => {
+        Axios.post(`/signIn`, data)
+            .then((res) => {
+                toast.success('Login successfully', { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
+                dispatch({ type: LOGIN_USER })
+            })
+            .catch(err => {
+                toast.error('Invalid Password or Email', { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
+            })
+    }
+
+
 }
 
 export const logoutUser = () => {
     Axios.get(`/logout`)
         .then(() => {
-
-            window.location.reload()
             toast.info('Logout', { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
+            window.location.reload()
         })
     return {
         type: LOGOUT_USER

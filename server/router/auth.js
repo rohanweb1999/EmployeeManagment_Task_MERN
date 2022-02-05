@@ -196,9 +196,9 @@ router.post('/signIn', async (req, res) => {
         let token;
         const { email, password } = req.body;
 
-        if (!email || !password) {
-            return res.status(400).send({ error: "please filled the data field!" });
-        }
+        // if (!email || !password) {
+        //     return res.status(400).send({ error: "please filled the data field!" });
+        // }
         const userLogin = await User.findOne({ email: email, password: password });
 
         if (userLogin) {
@@ -211,6 +211,9 @@ router.post('/signIn', async (req, res) => {
             });
             let loginstate = true
             res.send({ msg: "Login Sucessfully", loginstate });
+        }
+        else {
+            res.status(400).send({ error: "Invalid Password or Email" })
         }
 
     } catch (err) {
@@ -241,7 +244,7 @@ router.put('/updateUser/:id/:email', async (req, res) => {
             const emailExist = await User.findOne({ email: updatedValue.email });
 
             if (emailExist) {
-                return res.send({ msg: "This Email is already taken" });
+                return res.status(400).send({ error: "This Email is already taken" });
             }
             else {
                 //============================= Save Employee Updated Details =============================
@@ -277,18 +280,15 @@ router.put('/updateUser/:id/:email', async (req, res) => {
 
 //delete user
 router.delete('/deleteUser/:email', authenticate, async (req, res) => {
-    console.log(req.params.email);
-    console.log(req.authenticateUser.email);
+
     try {
         if (req.authenticateUser.email === req.params.email) {
             res.clearCookie("jwtLogin");
         }
         const result = await User.findOneAndDelete({ email: req.params.email });
-        console.log("result", result);
         res.send("deleted")
     }
     catch (err) {
-        console.log("error" + err);
         res.send("error" + err)
     };
 });

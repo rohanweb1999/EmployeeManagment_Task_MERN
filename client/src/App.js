@@ -8,6 +8,7 @@ import {
   BrowserRouter as Router,
   Route,
   Switch,
+  Redirect
 
 } from "react-router-dom";
 import Home from './Home.jsx';
@@ -26,19 +27,22 @@ import { useSelector } from 'react-redux';
 export const loginContext = createContext();
 const App = () => {
   const loginStatus = useSelector(state => state.employeeReducer.loginStatus)
-  console.log(loginStatus);
+  console.log("loginStatus", loginStatus);
   return (
     <>
       <Router>
         <Navbar />
         <Switch>
-          <Route exact path="/"  ><Home></Home></Route>
-          <Route path="/signUp"><Signup></Signup></Route>
-          <Route path="/editUser/:id"  ><Signup></Signup></Route>
-          <ProtectedRoute exact path="/signIn" ><Signin></Signin></ProtectedRoute>
-          <ProtectedRoute exact path="/logout" ><Signin></Signin></ProtectedRoute>
-          <ProtectedRoute path="/dashboard" ><Dashboard></Dashboard></ProtectedRoute>
-          <Route path="*"  ><PagenotFound></PagenotFound></Route>
+          <Route exact path="/" component={Home} />
+          <Route path="/signUp" component={Signup} />
+          <Route path="/editUser/:id" component={Signup} />
+          <ProtectedRoute exact path="/logout" component={Signin} authStatus={loginStatus} />
+          <ProtectedRoute exact path="/dashboard" component={Dashboard} authStatus={loginStatus} />
+          {
+            loginStatus !== false ? <Route exact path="/signIn" component={Signin} /> : <Redirect to="/dashboard" />
+          }
+
+          <Route path="*" component={PagenotFound} />
         </Switch>
       </Router>
     </>

@@ -15,51 +15,38 @@ import { logoutUser } from "./actions";
 
 
 const Navbar = () => {
-
+    const dispatch = useDispatch
     const loginAuthenticateUser = useSelector(state => state.employeeReducer.loginAuthenticateUser)
+    const loginStatus = useSelector(state => state.employeeReducer.loginStatus)
 
-
-    const [cookieStatus, setcookieStatus] = useState('')
-    useEffect((e) => {
-        const cookie = Cookies.get('jwtLogin')
-        if (cookie) {
-            setcookieStatus(cookie)
-        }
-    }, [cookieStatus])
-    const dispatch = useDispatch();
-
-
-    const registration = () => {
-        Cookies.remove('jwtLogin')
+    const logout = () => {
+        dispatch(logoutUser())
     }
-    const signin = () => {
-        Cookies.remove('jwtLogin')
-    }
-    const home = () => {
-        Cookies.remove('jwtLogin')
-
-    }
-    console.log("cookie", cookieStatus);
     return (
         <div className="navbar">
             <div className="items">
                 <span>
-                    <NavLink to="/" id="Logo" onClick={home}><h1>WELCOME {loginAuthenticateUser ? `${loginAuthenticateUser.firstName} ${loginAuthenticateUser.lastName}` : null}</h1></NavLink>
+                    <NavLink to="/" id="Logo" ><h1>WELCOME {loginAuthenticateUser ? `${loginAuthenticateUser.firstName} ${loginAuthenticateUser.lastName}` : null}</h1></NavLink>
                     <div><h4>{loginAuthenticateUser ? `You are signed in as ${loginAuthenticateUser.email}` : null}</h4></div>
                 </span>
-                {
-                    cookieStatus ? <div className="itemsNav2">
-                        <NavLink to="/Signup" id="btn2" ><button className='reg-btn' onClick={registration}>Registration</button></NavLink>
-                        <NavLink to="/logout"><button className='logout-btn' onClick={() => dispatch(logoutUser())}>LOG OUT</button></NavLink>
+                <div className="itemsNav2">
+                    {
+                        loginStatus && (
+                            <>
+                                <NavLink to="/Signup" id="btn2" ><button className='reg-btn' >Registration</button></NavLink>
+                                <NavLink to="/Signin" id="btn1" ><button className='signin-btn'>SIGN IN</button></NavLink>
+                            </>
+                        )
+                    }
+                    {
+                        !loginStatus && (
 
-                    </div>
-                        :
-                        <div className="itemsNav2">
-                            <NavLink to="/Signup" id="btn2" ><button className='reg-btn' onClick={registration}>Registration</button></NavLink>
-                            <NavLink to="/Signin" id="btn1" ><button className='signin-btn' onClick={signin}>SIGN IN</button></NavLink>
-                        </div>
-                }
+                            <button className='logout-btn' onClick={() => logout()}>LOG OUT</button>
 
+
+                        )
+                    }
+                </div>
 
             </div>
 

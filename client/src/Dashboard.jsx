@@ -27,6 +27,8 @@ const Dashboard = () => {
     ///////////////UseSelector/////////////////////////////////
 
     const employeeList = useSelector(state => state.employeeReducer.employeeList)
+    const deleteUser = useSelector(state => state.employeeReducer.deleteUser)
+
     const page = useSelector(state => state.employeeReducer.page)
 
     const dispatch = useDispatch();
@@ -34,7 +36,7 @@ const Dashboard = () => {
     /////////////// Useeffect for  fetchdata /////////////////////////////
     useEffect((e) => {
         dispatch(fetchData(pageNumber, selectOption, request))
-    }, [pageNumber, selectOption, request, dispatch])
+    }, [pageNumber, selectOption, request, deleteUser, dispatch])
 
 
     ///////////////  UseEffect for Dispatch delete function API /////////////////////////////
@@ -46,6 +48,7 @@ const Dashboard = () => {
 
     }
     const onchangeChandler = event => {
+        setpageNumber(1)
         setRequest(event.target.value)
     }
     const debouncedOnChange = debounce(onchangeChandler, 500)

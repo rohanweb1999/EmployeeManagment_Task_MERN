@@ -7,13 +7,12 @@
 /////////////////////////////////////////////////////////////////////////////////////
 
 import React, { useState, useEffect } from "react";
-import Axios from 'axios'
 import { TextField } from "@material-ui/core";
 import "./App.css";
 import { NavLink, useHistory } from "react-router-dom";
 import sideImg from "../src/employee.png";
 import { Form, Button } from "antd";
-import { useFormik, Formik, ErrorMessage } from "formik";
+import { useFormik } from "formik";
 import queryString from 'query-string';
 import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +20,8 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getAllCountries, getCities, getState, submitData, updateSelectedUserdata } from "./actions";
 import * as Yup from 'yup'
+import debounce from 'lodash.debounce';
+
 /////////////////////////////////////////////////////////////////////////////////////
 /******************Load module End ***********************************************/
 /////////////////////////////////////////////////////////////////////////////////////
@@ -52,7 +53,6 @@ const Signup = () => {
 
 
     ///////////////////////////////  UseSelector End /////////////////////////////////////////
-    console.log("emailExist", emailExist);
 
     ///////////////////////////////  UseEffect Start /////////////////////////////////////////
     useEffect(() => {
@@ -103,6 +103,11 @@ const Signup = () => {
             Cookies.remove('jwtLogin')
         }
     }, [editedData])
+    useEffect(() => {
+        if (emailExist === true) {
+            history.push('/dashboard')
+        }
+    }, [emailExist])
 
     ///////////////////////////////  UseEffect End /////////////////////////////////////////
 
@@ -159,6 +164,7 @@ const Signup = () => {
             .oneOf([Yup.ref('password'), null], 'Confirm Password Not Match')
             .required('Confirm password is required'),
     })
+    // const debouncedOnChange = debounce(emailCheck, 500)
     const initialValues = {
         id: new Date().getTime().toString(),
         firstName: "",
@@ -183,28 +189,17 @@ const Signup = () => {
             //update the user data
             if (id) {
                 dispatch(updateSelectedUserdata(id, values, editedData.email))
-
-                if (emailExist === "This Email is already taken") {
-                    toast.error(emailExist, { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
-                } else {
-                    history.push('/dashboard')
-                    toast.success(emailExist, { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
-                    dispatch(updateSelectedUserdata(id, values, editedData.email))
-
-                }
-
             }
             else {
                 //add new user
                 if (values.password === values.confirmPassword) {
-                    console.log(values);
                     formik.handleReset()
+                    history.push('/signin')
+
                     dispatch(submitData(values))
 
-                } else {
-                    toast.error("ConfirmPassword Not Match", { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
-                }
 
+                }
             }
         }
     });
@@ -221,7 +216,6 @@ const Signup = () => {
                         variant="standard"
                         name="firstName"
                         type="text"
-                        required
                         // onChange={formik.handleChange}
                         // value={formik.values.firstName}
                         {...formik.getFieldProps("firstName")}
@@ -239,7 +233,6 @@ const Signup = () => {
                         name="lastName"
                         type="text"
 
-                        required
                         // onChange={formik.handleChange}
                         // value={formik.values.lastName}
                         {...formik.getFieldProps("lastName")}
@@ -257,9 +250,7 @@ const Signup = () => {
                         variant="standard"
                         name="email"
                         type="email"
-
-                        required
-                        // onChange={formik.handleChange}
+                        // onChange={(e) => emailCheck(e)}
                         // value={formik.values.email}
                         {...formik.getFieldProps("email")}
                     />
@@ -276,7 +267,6 @@ const Signup = () => {
                         variant="standard"
                         name="contact"
                         type="number"
-                        required
                         // onChange={formik.handleChange}
                         // value={formik.values.contact}
                         {...formik.getFieldProps("contact")}
@@ -294,7 +284,6 @@ const Signup = () => {
                         variant="standard"
                         name="profession"
                         type="text"
-                        required
                         // onChange={formik.handleChange}
                         // value={formik.values.profession}
                         {...formik.getFieldProps("profession")}
@@ -313,7 +302,6 @@ const Signup = () => {
                         variant="standard"
                         name="salaryJan"
                         type="number"
-                        required
                         // onChange={formik.handleChange}
                         // value={formik.values.salaryJan}
                         {...formik.getFieldProps("salaryJan")}
@@ -332,7 +320,6 @@ const Signup = () => {
                         variant="standard"
                         name="salaryFeb"
                         type="number"
-                        required
                         // onChange={formik.handleChange}
                         // value={formik.values.salaryFeb}
                         {...formik.getFieldProps("salaryFeb")}
@@ -350,7 +337,6 @@ const Signup = () => {
                         variant="standard"
                         name="salaryMar"
                         type="number"
-                        required
                         // onChange={formik.handleChange}
                         // value={formik.values.salaryMar}
                         {...formik.getFieldProps("salaryMar")}
@@ -424,7 +410,6 @@ const Signup = () => {
                         variant="standard"
                         name="password"
                         type="password"
-                        required
                         onChange={formik.handleChange}
                         // value={formik.values.password}
                         {...formik.getFieldProps("password")}
@@ -442,7 +427,6 @@ const Signup = () => {
                         label="Confirm Password"
                         variant="standard"
                         name="confirmPassword"
-                        required
                         type="password"
                         onChange={formik.handleChange}
                         // value={formik.values.confirmPassword}

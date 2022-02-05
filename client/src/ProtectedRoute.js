@@ -3,7 +3,6 @@
  */
 //////////////// Load module start ///////////////////////
 import React from 'react'
-import { useSelector } from 'react-redux';
 import { Route, Redirect } from 'react-router-dom';
 
 //protected route
@@ -11,16 +10,16 @@ import { Route, Redirect } from 'react-router-dom';
 //component: componenet connected with route
 //...rest: rest of the properties
 const ProtectedRoute = ({ authStatus, component: Component, ...rest }) => {
-    const loginStatus = useSelector(state => state.employeeReducer.loginStatus)
 
+    console.log("authStatus", authStatus);
     return (
         <>
             <Route {...rest} render={(props) => {
-                if (loginStatus !== true) {
+                if (authStatus !== true) {
                     return <Component {...props} />;
                 }
                 else {
-                    return <Redirect to='/Dashboard' />;
+                    return <Redirect to='/' />;
                 }
             }} />
         </>
