@@ -15,7 +15,8 @@ import { logoutUser } from "./actions";
 
 
 const Navbar = () => {
-    const dispatch = useDispatch
+    const history = useDispatch()
+    const dispatch = useDispatch()
     const loginAuthenticateUser = useSelector(state => state.employeeReducer.loginAuthenticateUser)
     const loginStatus = useSelector(state => state.employeeReducer.loginStatus)
 
@@ -33,6 +34,7 @@ const Navbar = () => {
                     {
                         loginStatus && (
                             <>
+
                                 <NavLink to="/Signup" id="btn2" ><button className='reg-btn' >Registration</button></NavLink>
                                 <NavLink to="/Signin" id="btn1" ><button className='signin-btn'>SIGN IN</button></NavLink>
                             </>

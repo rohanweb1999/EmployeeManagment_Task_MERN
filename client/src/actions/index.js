@@ -2,7 +2,7 @@
  * @author Rohan Gajjar
  */
 ////////////////    start load Modules //////////////////////////////////////
-import { DELETE_SELECT_EMPLOYEE, GET_ALL_COUNTRY, GET_CITIES, GET_DATA, GET_STATE, LOGIN_USER, LOGOUT_USER, SELECT_EDIT_LIST, SERCH_USER_DATA, SUBMIT_DATA, UPDATE_USER } from "../actions/Type"
+import { DELETE_SELECT_EMPLOYEE, GET_ALL_COUNTRY, GET_CITIES, GET_DATA, GET_STATE, LOGIN_USER, LOGOUT_USER, SELECT_EDIT_LIST, SERCH_USER_DATA, SUBMIT_DATA, UPDATE_USER, VALID_REGISTER_CHECK } from "../actions/Type"
 import Axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -66,37 +66,34 @@ export const getCities = (stateId) => {
 }
 
 export const submitData = (userData) => {
-    Axios.post('/signUp', userData)
-        .then((res) => {
-            const result = res.data
-            console.log(result);
-            if (result === "user Already Exist") {
-                toast.error(result, { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
-
-            } else {
+    return (dispatch) => {
+        Axios.post('/signUp', userData)
+            .then((res) => {
+                const result = res.data
                 toast.success(result, { position: toast.POSITION.TOP_CENTER, autoClose: 2000 });
+                dispatch({ type: SUBMIT_DATA })
+            })
+            .catch(err => {
+                toast.error("Invalid Registration", { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
 
-            }
-        })
-        .catch(err => {
-            toast.error("Invalid Registration", { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
-
-        })
-    return {
-        type: SUBMIT_DATA
+            })
+    }
+}
+export const validRegisterCheck = () => {
+    return (dispatch) => {
+        dispatch({ type: VALID_REGISTER_CHECK })
     }
 }
 export const deleteSelectEmployee = (id) => {
-    Axios.delete(`/deleteUser/${id}`)
-        .then(() => {
-            toast.warning("Record deleted", { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
-        })
-        .catch(err => {
-            console.log("error" + err);
-        })
-    return {
-        type: DELETE_SELECT_EMPLOYEE,
-        id,
+    return (dispatch) => {
+        Axios.delete(`/deleteUser/${id}`)
+            .then((res) => {
+                toast.warning("Record deleted", { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
+                dispatch({ type: DELETE_SELECT_EMPLOYEE, payload: res.data })
+            })
+            .catch(err => {
+                console.log("error" + err);
+            })
     }
 }
 
@@ -142,7 +139,6 @@ export const logoutUser = () => {
     Axios.get(`/logout`)
         .then(() => {
             toast.info('Logout', { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
-            window.location.reload()
         })
     return {
         type: LOGOUT_USER

@@ -177,7 +177,7 @@ router.post('/signUp', async (req, res) => {
     try {
         const userExist = await User.findOne({ email: userData.email })
         if (userExist) {
-            res.send("user Already Exist")
+            res.status(400).send({ error: "user Already Exist" })
         } else {
             const result = await User(userData).save();
             res.send("Register Sucessfuly")
@@ -283,10 +283,21 @@ router.delete('/deleteUser/:email', authenticate, async (req, res) => {
 
     try {
         if (req.authenticateUser.email === req.params.email) {
+            //============================= Clear Cookie =============================
             res.clearCookie("jwtLogin");
+            const loginStatus = true
+            //============================= Delete Employee =============================
+            await User.findOneAndDelete({ email: req.params.email });
+            //============================= Send Response =============================
+            res.send(loginStatus)
         }
-        const result = await User.findOneAndDelete({ email: req.params.email });
-        res.send("deleted")
+        else {
+            const loginStatus = false
+            //============================= Delete Employee =============================
+            await User.findOneAndDelete({ email: req.params.email });
+            //============================= Send Response =============================
+            res.send(loginStatus)
+        }
     }
     catch (err) {
         res.send("error" + err)

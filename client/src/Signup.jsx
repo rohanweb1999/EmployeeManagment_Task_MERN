@@ -18,7 +18,7 @@ import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { getAllCountries, getCities, getState, submitData, updateSelectedUserdata } from "./actions";
+import { getAllCountries, getCities, getState, submitData, updateSelectedUserdata, validRegisterCheck } from "./actions";
 import * as Yup from 'yup'
 import debounce from 'lodash.debounce';
 
@@ -50,11 +50,18 @@ const Signup = () => {
     const newState = useSelector((state) => state.employeeReducer.newState);
     const newcities = useSelector((state) => state.employeeReducer.newcities);
     const emailExist = useSelector((state) => state.employeeReducer.emailExist);
-
+    const validUser = useSelector((state) => state.employeeReducer.validUser);
 
     ///////////////////////////////  UseSelector End /////////////////////////////////////////
 
     ///////////////////////////////  UseEffect Start /////////////////////////////////////////
+    useEffect(() => {
+        if (validUser === true) {
+            history.push('/signin')
+            dispatch(validRegisterCheck())
+        }
+
+    }, [validUser])
     useEffect(() => {
         dispatch(getAllCountries())
     }, [])
@@ -151,12 +158,12 @@ const Signup = () => {
             .required('salaryFeb must be Required'),
         salaryMar: Yup.number()
             .required('salaryMar must be Required'),
-        // countryId: Yup.string()
-        //     .required('Please Select Country'),
-        // stateId: Yup.string()
-        //     .required('Please Select State'),
-        // city: Yup.string()
-        //     .required('Please Select city'),
+        countryId: Yup.string()
+            .required('Please Select Country'),
+        stateId: Yup.string()
+            .required('Please Select State'),
+        cityId: Yup.string()
+            .required('Please Select city'),
         password: Yup.string()
             .min(8, 'Password must be at least 8 charaters')
             .required('Password is required'),
@@ -193,12 +200,7 @@ const Signup = () => {
             else {
                 //add new user
                 if (values.password === values.confirmPassword) {
-                    formik.handleReset()
-                    history.push('/signin')
-
                     dispatch(submitData(values))
-
-
                 }
             }
         }
@@ -466,8 +468,9 @@ const Signup = () => {
                                 </Form.Item>
                             )}
                     </div>
-                    <NavLink to="/signIn">I have already Registered</NavLink>
-
+                    {
+                        id ? null : <NavLink to="/signIn">I have already Registered</NavLink>
+                    }
                 </form>
 
                 <div className="Side-image">

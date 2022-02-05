@@ -23,11 +23,9 @@ import { useSelector } from 'react-redux';
 //////////////////// Load module end /////////////////////////////////////////
 
 
-
 export const loginContext = createContext();
 const App = () => {
   const loginStatus = useSelector(state => state.employeeReducer.loginStatus)
-  console.log("loginStatus", loginStatus);
   return (
     <>
       <Router>

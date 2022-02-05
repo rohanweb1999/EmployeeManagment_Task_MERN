@@ -1,7 +1,7 @@
 /**
  * @author Rohan Gajjar
  */
-import { SUBMIT_DATA, GET_DATA, ASSENDINGORDERDATA, PAGGINATION, GET_ALL_COUNTRY, GET_STATE, GET_CITIES, LOGIN_USER, LOGOUT_USER, UPDATE_USER, DELETE_SELECT_EMPLOYEE } from "../actions/Type"
+import { SUBMIT_DATA, GET_DATA, ASSENDINGORDERDATA, PAGGINATION, GET_ALL_COUNTRY, GET_STATE, GET_CITIES, LOGIN_USER, LOGOUT_USER, UPDATE_USER, DELETE_SELECT_EMPLOYEE, VALID_REGISTER_CHECK } from "../actions/Type"
 
 const initialState = {
     loginAuthenticateUser: "",
@@ -12,7 +12,8 @@ const initialState = {
     page: [],
     loginStatus: true,
     emailExist: false,
-    deleteUser: false
+    deleteUser: false,
+    validUser: false
 }
 
 const employeeReducer = (state = initialState, action) => {
@@ -30,7 +31,8 @@ const employeeReducer = (state = initialState, action) => {
 
         case PAGGINATION: return { ...state, employeeList: action.payload }
 
-        case SUBMIT_DATA: console.log("hello"); return { ...state, emailExist: action.payload }
+        case SUBMIT_DATA: return { ...state, emailExist: action.payload, validUser: true }
+        case VALID_REGISTER_CHECK: return { ...state, validUser: false }
         case UPDATE_USER: return { ...state, emailExist: true }
         case LOGIN_USER:
 
@@ -41,7 +43,8 @@ const employeeReducer = (state = initialState, action) => {
         case DELETE_SELECT_EMPLOYEE:
             return {
                 ...state,
-                deleteUser: true
+                deleteUser: true,
+                loginStatus: action.payload
             }
         case LOGOUT_USER: return { ...state, employeeList: [], loginStatus: true, loginAuthenticateUser: "" }
 
