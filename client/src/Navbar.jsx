@@ -15,11 +15,10 @@ import { logoutUser } from "./actions";
 
 
 const Navbar = () => {
-    const history = useDispatch()
     const dispatch = useDispatch()
     const loginAuthenticateUser = useSelector(state => state.employeeReducer.loginAuthenticateUser)
     const loginStatus = useSelector(state => state.employeeReducer.loginStatus)
-
+    const cookie = Cookies.get('jwtLogin')
     const logout = () => {
         dispatch(logoutUser())
     }
@@ -27,8 +26,8 @@ const Navbar = () => {
         <div className="navbar">
             <div className="items">
                 <span>
-                    <NavLink to="/" id="Logo" ><h1>WELCOME {loginAuthenticateUser ? `${loginAuthenticateUser.firstName} ${loginAuthenticateUser.lastName}` : null}</h1></NavLink>
-                    <div><h4>{loginAuthenticateUser ? `You are signed in as ${loginAuthenticateUser.email}` : null}</h4></div>
+                    <NavLink to="/" id="Logo" ><h1>WELCOME {loginAuthenticateUser && cookie ? `${loginAuthenticateUser.firstName} ${loginAuthenticateUser.lastName}` : null}</h1></NavLink>
+                    <div><h4>{loginAuthenticateUser && cookie ? `You are signed in as ${loginAuthenticateUser.email}` : null}</h4></div>
                 </span>
                 <div className="itemsNav2">
                     {
@@ -42,10 +41,10 @@ const Navbar = () => {
                     }
                     {
                         !loginStatus && (
-
-                            <button className='logout-btn' onClick={() => logout()}>LOG OUT</button>
-
-
+                            <>
+                                <NavLink to="/uploadFiles"><button className='uploadFiles'> UPLOAD FILES</button></NavLink>
+                                <button className='logout-btn' onClick={() => logout()}>LOG OUT</button>
+                            </>
                         )
                     }
                 </div>

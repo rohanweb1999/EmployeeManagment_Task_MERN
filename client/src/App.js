@@ -17,6 +17,7 @@ import Signup from './Signup.jsx';
 import Signin from './Signin.jsx';
 import PagenotFound from './PagenotFound';
 import Navbar from './Navbar';
+import UploadFiles from './fileUpload/UploadFiles'
 import ProtectedRoute from './ProtectedRoute';
 import { useSelector } from 'react-redux';
 
@@ -34,6 +35,9 @@ const App = () => {
           <Route exact path="/" component={Home} />
           <Route path="/signUp" component={Signup} />
           <Route path="/editUser/:id" component={Signup} />
+          <Route path="/uploadFiles" component={UploadFiles} />
+
+
           <ProtectedRoute exact path="/logout" component={Signin} authStatus={loginStatus} />
           <ProtectedRoute exact path="/dashboard" component={Dashboard} authStatus={loginStatus} />
           {

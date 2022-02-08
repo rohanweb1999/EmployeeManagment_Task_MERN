@@ -19,7 +19,15 @@ const initialState = {
 const employeeReducer = (state = initialState, action) => {
     switch (action.type) {
 
-        case GET_DATA: return { ...state, employeeList: action.payload.users, page: action.payload.totalPage, loginAuthenticateUser: action.payload.loginAuthenticateUser, emailExist: false }
+        case GET_DATA:
+            return {
+                ...state,
+                employeeList: action.payload.users,
+                page: action.payload.totalPage,
+                loginAuthenticateUser: action.payload.loginAuthenticateUser,
+                emailExist: false,
+                deleteUser: false
+            }
 
         case GET_ALL_COUNTRY: return { ...state, data: action.payload }
 
@@ -44,9 +52,16 @@ const employeeReducer = (state = initialState, action) => {
             return {
                 ...state,
                 deleteUser: true,
-                loginStatus: action.payload
+                loginStatus: action.payload,
+
             }
-        case LOGOUT_USER: return { ...state, employeeList: [], loginStatus: true, loginAuthenticateUser: "" }
+        case LOGOUT_USER:
+            return {
+                ...state,
+                employeeList: [],
+                loginStatus: true,
+                loginAuthenticateUser: ""
+            }
 
         default:
             return state;

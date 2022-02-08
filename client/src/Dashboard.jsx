@@ -28,16 +28,10 @@ const Dashboard = () => {
 
     const employeeList = useSelector(state => state.employeeReducer.employeeList)
     const deleteUser = useSelector(state => state.employeeReducer.deleteUser)
-
+    console.log("deleteUser", deleteUser);
     const page = useSelector(state => state.employeeReducer.page)
 
     const dispatch = useDispatch();
-
-    /////////////// Useeffect for  fetchdata /////////////////////////////
-    useEffect((e) => {
-        dispatch(fetchData(pageNumber, selectOption, request))
-    }, [pageNumber, selectOption, request, deleteUser, dispatch])
-
 
     ///////////////  UseEffect for Dispatch delete function API /////////////////////////////
     const handleDelete = (id) => {
@@ -52,6 +46,13 @@ const Dashboard = () => {
         setRequest(event.target.value)
     }
     const debouncedOnChange = debounce(onchangeChandler, 500)
+
+    /////////////// Useeffect for  fetchdata /////////////////////////////
+    useEffect((e) => {
+        dispatch(fetchData(pageNumber, selectOption, request))
+    }, [pageNumber, dispatch, selectOption, request, deleteUser])
+
+
     return (
         <>        <div className="das-main-div">
 
