@@ -2,7 +2,7 @@
  * @author Rohan Gajjar
  */
 ////////////////    start load Modules //////////////////////////////////////
-import { DELETE_SELECT_EMPLOYEE, GET_ALL_COUNTRY, GET_CITIES, GET_DATA, GET_STATE, LOGIN_USER, LOGOUT_USER, SELECT_EDIT_LIST, SERCH_USER_DATA, SUBMIT_DATA, UPDATE_USER, VALID_REGISTER_CHECK } from "../actions/Type"
+import { DELETE_SELECT_EMPLOYEE, FILE_UPLOAD, GET_ALL_COUNTRY, GET_CITIES, GET_DATA, GET_STATE, LOGIN_USER, LOGOUT_USER, SELECT_EDIT_LIST, SERCH_USER_DATA, SUBMIT_DATA, UPDATE_USER, VALID_REGISTER_CHECK } from "../actions/Type"
 import Axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -20,7 +20,6 @@ export const fetchData = (pageNumber, selectOption, searchUser) => {
             Axios.get(`/getUser/?Page=${pageNumber}&Sort=${selectOption}&Request=${searchUser}`)
                 .then((res) => {
                     const data = res.data
-                    console.log(data);
                     dispatch({ type: GET_DATA, payload: data })
                 })
         }
@@ -156,5 +155,19 @@ export const searchUser = (searchData) => {
                 })
         }
     )
-
+}
+export const fileUpload = (files) => {
+    console.log("files", files);
+    return (
+        (dispatch) => {
+            Axios.post('/upload-files', files)
+                .then(res => {
+                    toast.success("File Upload Successfully!", { position: toast.POSITION.TOP_CENTER, autoClose: 2000 });
+                    dispatch({ type: FILE_UPLOAD })
+                })
+                .catch(err => {
+                    toast.error("File Not Uploaded!", { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
+                });
+        }
+    )
 }

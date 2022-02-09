@@ -3,11 +3,10 @@
  */
 
 ///////////// Load module start ////////////////////////////
-import { React, useState } from 'react'
+import { React } from 'react'
 import 'antd/dist/antd.css';
 import { NavLink } from 'react-router-dom';
 import Cookies from 'js-cookie'
-import { useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "./actions";
 

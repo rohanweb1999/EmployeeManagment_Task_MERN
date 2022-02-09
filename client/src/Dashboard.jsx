@@ -28,7 +28,6 @@ const Dashboard = () => {
 
     const employeeList = useSelector(state => state.employeeReducer.employeeList)
     const deleteUser = useSelector(state => state.employeeReducer.deleteUser)
-    console.log("deleteUser", deleteUser);
     const page = useSelector(state => state.employeeReducer.page)
 
     const dispatch = useDispatch();

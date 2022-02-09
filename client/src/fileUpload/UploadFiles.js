@@ -1,18 +1,33 @@
 import React, { useState } from 'react';
+import { useDispatch } from "react-redux";
+import { fileUpload } from '../actions';
+
 
 const UploadFiles = () => {
-    const [files, setFiles] = useState([])
-    console.log(files);
-    const uploadFiles = () => {
-        localStorage.setItem('files', files)
-    }
+    const [files, setFiles] = useState()
+    const dispatch = useDispatch();
 
+    const onChangeFileHandler = (e) => {
+        setFiles(e.target.files[0])
+
+    }
+    console.log(files);
+    const handleSubmit = (event) => {
+        event.preventDefault()
+        const formData = new FormData()
+        formData.append('files', files);
+        formData.append('fileName', files.name);
+
+        dispatch(fileUpload(formData))
+    }
     return (
         <>
             <div>
                 <div className='mainWrapper'>
-                    <input type='file' name='files' onChange={(e) => setFiles(e.target.files)}></input>
-                    <button type='submit' onClick={uploadFiles}>SUBMIT</button>
+                    <form onSubmit={handleSubmit}>
+                        <input type='file' name='files' onChange={(e) => onChangeFileHandler(e)}></input>
+                        <button type='submit' >SUBMIT</button>
+                    </form>
                 </div>
                 <div className='wrapepr'>
                     <h1>Uploaded Files</h1>

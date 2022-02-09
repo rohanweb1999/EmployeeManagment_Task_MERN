@@ -2,8 +2,7 @@
  * @author Rohan Gajjar
  */
 ///////////////////// Load module start /////////////////////
-import { React, useContext } from 'react'
-import { NavLink, useHistory } from "react-router-dom";
+import { React } from 'react'
 import { Button, Form } from 'antd';
 import { useFormik } from "formik";
 import { TextField } from "@material-ui/core";
@@ -12,16 +11,14 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { loginUserData } from './actions';
 import * as Yup from 'yup'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 ////////////////////// Load module End //////////////////
 
 toast.configure()
 const Signin = () => {
-    const loginStatus = useSelector(state => state.employeeReducer.loginStatus)
     const dispatch = useDispatch()
     //navigate the page
-    const history = useHistory();
     const validationSchema = Yup.object().shape({
         email: Yup.string()
             .email('Email is invalid')

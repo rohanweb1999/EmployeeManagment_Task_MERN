@@ -20,7 +20,6 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getAllCountries, getCities, getState, submitData, updateSelectedUserdata, validRegisterCheck } from "./actions";
 import * as Yup from 'yup'
-import debounce from 'lodash.debounce';
 
 /////////////////////////////////////////////////////////////////////////////////////
 /******************Load module End ***********************************************/
@@ -83,16 +82,7 @@ const Signup = () => {
     //for getting the edited user data
     useEffect(() => {
         if (id) {
-
             seteditedData(editUser)
-            // Axios.get(`/editUser/${id}`)
-
-            //     .then(res => {
-            //         seteditedData(res.data[0]);
-            //     })
-            //     .catch(err => {
-            //         console.log("error: " + err);
-            //     })
         }
     }, [id]);
     const editUser = employeeList.find((ele) => ele._id === id ? ele : null);

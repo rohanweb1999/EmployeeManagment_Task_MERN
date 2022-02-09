@@ -1,29 +1,20 @@
-const multer = require('multer')
+const multer = require('multer');
+const path = require('path');
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cd(null, './uploads/')
+
+//Multer Config
+module.exports = multer({
+    storage: multer.diskStorage({}),
+    limits: {
+        fieldNameSize: 200,
+        fileSize: 5 * 1024 * 1024,
     },
-    filename: function (req, file, cb) {
-        cd(null, new Date().toISOString() + '-' + file.originalname)
+    fileFilter: (req, file, cb) => {
+        let ext = path.extname(file.originalname);
+        if (ext !== '.jpg' && ext !== '.jpeg' && ext !== '.png' && ext !== '.pdf' && ext !== '.doc' && ext !== '.txt' && ext !== '.docx') {
+            cb(new Error("File Type is Not supported"), false);
+            return;
+        }
+        cb(null, true)
     }
-})
-
-//////file validation ////
-
-const fileFilter = (req, file, cb) => {
-    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-        cd(null, true)
-    }
-    else {
-        cd({ message: 'unsupported file Formet' }, false)
-    }
-}
-
-const upload = multer({
-    storage: storage,
-    limits: { fileSize: 1024 * 1024 },
-    fileFilter: fileFilter
-})
-
-module.exports = upload;
+});

@@ -12,6 +12,8 @@ const City = require('../models/cityShema')
 const country = require('../models/countrySchema')
 const State = require('../models/stateSchema')
 require('../db/conn');
+const upload = require('../multer')
+const cloudinary = require('../cloudinary')
 
 ////////////////////// Load module end///////////////////////////////////////////////////
 
@@ -329,6 +331,30 @@ router.get('/logout', authenticate, async (req, res) => {
     }
 
 });
+router.post('/upload-files', upload.single('files'), async (req, res) => {
+
+    try {
+        // console.log("req.files", req.file)
+        const { path } = req.file
+        const result = await cloudinary.uploader.upload(path, { resource_type: 'raw' });
+        console.log("result", result)
+
+        //create User instance
+        let user = new User({
+            filename: result.name,
+            filepath: result.secure_url,
+            cloudinary_id: result.public_id
+        });
+        await user.save();
+        res.json(user);
+
+    }
+    catch (err) {
+        res.send(err);
+    }
+})
+
+
 
 
 

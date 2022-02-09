@@ -1,7 +1,7 @@
 /**
  * @author Rohan Gajjar
  */
-import { SUBMIT_DATA, GET_DATA, ASSENDINGORDERDATA, PAGGINATION, GET_ALL_COUNTRY, GET_STATE, GET_CITIES, LOGIN_USER, LOGOUT_USER, UPDATE_USER, DELETE_SELECT_EMPLOYEE, VALID_REGISTER_CHECK } from "../actions/Type"
+import { SUBMIT_DATA, GET_DATA, ASSENDINGORDERDATA, PAGGINATION, GET_ALL_COUNTRY, GET_STATE, GET_CITIES, LOGIN_USER, LOGOUT_USER, UPDATE_USER, DELETE_SELECT_EMPLOYEE, VALID_REGISTER_CHECK, FILE_UPLOAD } from "../actions/Type"
 
 const initialState = {
     loginAuthenticateUser: "",
@@ -61,6 +61,10 @@ const employeeReducer = (state = initialState, action) => {
                 employeeList: [],
                 loginStatus: true,
                 loginAuthenticateUser: ""
+            }
+        case FILE_UPLOAD:
+            return {
+                ...state
             }
 
         default:
