@@ -331,25 +331,41 @@ router.get('/logout', authenticate, async (req, res) => {
     }
 
 });
-router.post('/upload-files', upload.single('files'), async (req, res) => {
+router.post('/upload-files', authenticate, upload.array('multi-files'), async (req, res) => {
 
     try {
-        // console.log("req.files", req.file)
-        const { path } = req.file
-        const result = await cloudinary.uploader.upload(path, { resource_type: 'raw' });
-        console.log("result", result)
 
-        //create User instance
-        let user = new User({
-            filename: result.name,
-            filepath: result.secure_url,
-            cloudinary_id: result.public_id
-        });
-        await user.save();
-        res.json(user);
+        console.log("req.files", req.files)
+        const files = req.files;
+
+        for (const file of files) {
+            const { path } = file;
+            const uploadFiles = await cloudinary.uploader.upload(path, { resource_type: 'raw' })
+            console.log("uplpadFiles", uploadFiles);
+            const File = {
+                filename: file.originalname,
+                filepath: uploadFiles.secure_url,
+                filetype: uploadFiles.format
+            }
+            await User.updateOne({ email: req.authenticateUser.email }, { $push: { Files: File } });
+        }
+        const loader = false
+        res.send({ msg: "File  Uploaded Succeessfully!! ", loader });
+
+    } catch (err) {
+        res.status(400).send({ error: "File Not Upload" })
 
     }
-    catch (err) {
+})
+//**********  fetch files user uploaded */
+router.get('/fetchFiles', authenticate, async (req, res) => {
+
+    try {
+        const AuthenticateUser = req.authenticateUser;
+
+        res.send(AuthenticateUser.Files)
+
+    } catch (err) {
         res.send(err);
     }
 })

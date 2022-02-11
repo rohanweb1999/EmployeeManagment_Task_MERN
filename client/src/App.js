@@ -20,12 +20,12 @@ import Navbar from './Navbar';
 import UploadFiles from './fileUpload/UploadFiles'
 import ProtectedRoute from './ProtectedRoute';
 import { useSelector } from 'react-redux';
-
 //////////////////// Load module end /////////////////////////////////////////
 
 
 export const loginContext = createContext();
 const App = () => {
+
   const loginStatus = useSelector(state => state.employeeReducer.loginStatus)
   return (
     <>
@@ -35,9 +35,7 @@ const App = () => {
           <Route exact path="/" component={Home} />
           <Route path="/signUp" component={Signup} />
           <Route path="/editUser/:id" component={Signup} />
-          <Route path="/uploadFiles" component={UploadFiles} />
-
-
+          <ProtectedRoute path="/uploadFiles" component={UploadFiles} authStatus={loginStatus} />
           <ProtectedRoute exact path="/logout" component={Signin} authStatus={loginStatus} />
           <ProtectedRoute exact path="/dashboard" component={Dashboard} authStatus={loginStatus} />
           {

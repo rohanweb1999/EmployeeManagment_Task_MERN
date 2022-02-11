@@ -69,6 +69,19 @@ const userSchema = new mongoose.Schema({
     cloudinary_id: {
         type: String,
     },
+    Files: [
+        {
+            filename: {
+                type: String
+            },
+            filepath: {
+                type: String
+            },
+            filetype: {
+                type: String
+            },
+        }
+    ],
     Token: [
         {
             token: {
@@ -83,10 +96,11 @@ const userSchema = new mongoose.Schema({
 // userSchema.pre('save', async function (next) {
 //     if (this.isModified('password')) {
 //         this.password = await bcrypt.hash(this.password, 10);
-//         this.cpassword = await bcrypt.hash(this.cpassword, 10);
+//         this.confirmPassword = await bcrypt.hash(this.confirmPassword, 10);
 //     }
 //     next();
 // });
+
 //generating token
 userSchema.methods.generateAuthToken = async function () {
     try {

@@ -2,7 +2,7 @@
  * @author Rohan Gajjar
  */
 ////////////////    start load Modules //////////////////////////////////////
-import { DELETE_SELECT_EMPLOYEE, FILE_UPLOAD, GET_ALL_COUNTRY, GET_CITIES, GET_DATA, GET_STATE, LOGIN_USER, LOGOUT_USER, SELECT_EDIT_LIST, SERCH_USER_DATA, SUBMIT_DATA, UPDATE_USER, VALID_REGISTER_CHECK } from "../actions/Type"
+import { DELETE_SELECT_EMPLOYEE, FETCH_FILES, FILE_UPLOAD, GET_ALL_COUNTRY, GET_CITIES, GET_DATA, GET_STATE, LOADER, LOGIN_USER, LOGOUT_USER, SELECT_EDIT_LIST, SERCH_USER_DATA, SUBMIT_DATA, UPDATE_USER, VALID_REGISTER_CHECK } from "../actions/Type"
 import Axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -14,7 +14,6 @@ toast.configure()
 
 //******************************* */ Actions start *******************************************//
 export const fetchData = (pageNumber, selectOption, searchUser) => {
-
     return (
         (dispatch) => {
             Axios.get(`/getUser/?Page=${pageNumber}&Sort=${selectOption}&Request=${searchUser}`)
@@ -26,9 +25,7 @@ export const fetchData = (pageNumber, selectOption, searchUser) => {
     )
 }
 
-
 export const getAllCountries = () => {
-
     return (
         (dispatch) => {
             Axios.get("/getAllCountries")
@@ -39,8 +36,8 @@ export const getAllCountries = () => {
         }
     )
 }
-export const getState = (selectedCountryId) => {
 
+export const getState = (selectedCountryId) => {
     return (
         (dispatch) => {
             Axios.get(`/getState/${selectedCountryId}`)
@@ -51,8 +48,8 @@ export const getState = (selectedCountryId) => {
         }
     )
 }
-export const getCities = (stateId) => {
 
+export const getCities = (stateId) => {
     return (
         (dispatch) => {
             Axios.get(`/getcities/${stateId}`)
@@ -156,18 +153,42 @@ export const searchUser = (searchData) => {
         }
     )
 }
-export const fileUpload = (files) => {
-    console.log("files", files);
+export const loaderToggle = () => {
     return (
         (dispatch) => {
+            dispatch({ type: LOADER })
+        }
+    )
+}
+export const fileUpload = (files) => {
+    return (
+        (dispatch) => {
+            dispatch({ type: FILE_UPLOAD })
             Axios.post('/upload-files', files)
                 .then(res => {
-                    toast.success("File Upload Successfully!", { position: toast.POSITION.TOP_CENTER, autoClose: 2000 });
-                    dispatch({ type: FILE_UPLOAD })
+                    const msg = res.data.msg
+                    toast.success(msg, { position: toast.POSITION.TOP_CENTER, autoClose: 2000 });
+                    if (msg) {
+                        dispatch({ type: LOADER, paylaod: res.data })
+                    }
                 })
                 .catch(err => {
-                    toast.error("File Not Uploaded!", { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
+                    toast.error(err, { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
                 });
+        }
+    )
+}
+export const fetchFilesUsers = () => {
+    return (
+        (dispatch) => {
+            Axios.get('/fetchFiles')
+                .then(res => {
+                    console.log(res.data);
+                    dispatch({ type: FETCH_FILES, payload: res.data })
+                })
+                .catch(err => {
+
+                })
         }
     )
 }

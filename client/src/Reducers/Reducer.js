@@ -1,7 +1,7 @@
 /**
  * @author Rohan Gajjar
  */
-import { SUBMIT_DATA, GET_DATA, ASSENDINGORDERDATA, PAGGINATION, GET_ALL_COUNTRY, GET_STATE, GET_CITIES, LOGIN_USER, LOGOUT_USER, UPDATE_USER, DELETE_SELECT_EMPLOYEE, VALID_REGISTER_CHECK, FILE_UPLOAD } from "../actions/Type"
+import { SUBMIT_DATA, GET_DATA, ASSENDINGORDERDATA, PAGGINATION, GET_ALL_COUNTRY, GET_STATE, GET_CITIES, LOGIN_USER, LOGOUT_USER, UPDATE_USER, DELETE_SELECT_EMPLOYEE, VALID_REGISTER_CHECK, FILE_UPLOAD, FETCH_FILES, LOADER } from "../actions/Type"
 
 const initialState = {
     loginAuthenticateUser: "",
@@ -10,10 +10,12 @@ const initialState = {
     newState: [],
     newcities: [],
     page: [],
+    files: [],
     loginStatus: true,
     emailExist: false,
     deleteUser: false,
-    validUser: false
+    validUser: false,
+    loader: false
 }
 
 const employeeReducer = (state = initialState, action) => {
@@ -62,9 +64,21 @@ const employeeReducer = (state = initialState, action) => {
                 loginStatus: true,
                 loginAuthenticateUser: ""
             }
+        case LOADER:
+            return {
+                ...state,
+                loader: false
+            }
         case FILE_UPLOAD:
             return {
-                ...state
+                ...state,
+                loader: true
+
+            }
+        case FETCH_FILES:
+            return {
+                ...state,
+                files: action.payload.Files
             }
 
         default:

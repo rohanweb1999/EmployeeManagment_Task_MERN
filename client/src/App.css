@@ -314,3 +314,20 @@ input.form-control:focus {
   justify-content: center;
   display: flex;
 }
+.filenotFound {
+  font-size: large;
+  padding-top: 100px;
+  justify-content: center;
+  display: flex;
+}
+.showFiles {
+  font-size: large;
+  justify-content: center;
+  display: flex;
+}
+img {
+  vertical-align: middle;
+  border-style: none;
+  width: 40px;
+  height: 40px;
+}
