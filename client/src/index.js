@@ -9,6 +9,7 @@ import './index.css';
 import App from './App'
 import { Provider } from 'react-redux';
 import store from '../src/store'
+import 'semantic-ui-css/semantic.min.css'
 ////////// Load module End //////////////////////
 
 ReactDOM.render(

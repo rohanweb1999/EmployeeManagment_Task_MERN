@@ -335,13 +335,12 @@ router.post('/upload-files', authenticate, upload.array('multi-files'), async (r
 
     try {
 
-        console.log("req.files", req.files)
         const files = req.files;
 
         for (const file of files) {
+
             const { path } = file;
-            const uploadFiles = await cloudinary.uploader.upload(path, { resource_type: 'raw' })
-            console.log("uplpadFiles", uploadFiles);
+            const uploadFiles = await cloudinary.uploader.upload(path, { resource_type: 'auto' })
             const File = {
                 filename: file.originalname,
                 filepath: uploadFiles.secure_url,
@@ -361,9 +360,47 @@ router.post('/upload-files', authenticate, upload.array('multi-files'), async (r
 router.get('/fetchFiles', authenticate, async (req, res) => {
 
     try {
-        const AuthenticateUser = req.authenticateUser;
+        let { Page } = req.query;
+        let limit = 5
+        let skip = (Page - 1) * limit
+        const totalFiles = req.authenticateUser.Files;
 
-        res.send(AuthenticateUser.Files)
+        let totalPage = Math.ceil(totalFiles.length / limit);
+        console.log(totalPage);
+        const aggreagteQuery = [];
+
+        aggreagteQuery.push(
+            {
+                $match: {
+                    Files: req.authenticateUser.Files
+                }
+            },
+            {
+                $project: {
+                    _id: 0, getFiles: {
+                        $slice: ["$Files", skip, limit]
+                    },
+                }
+            },
+        );
+        const result = await User.aggregate([aggreagteQuery]);
+        console.log(result);
+
+        res.send({ result, totalPage })
+
+    } catch (err) {
+        res.send(err);
+    }
+})
+router.get('/deleteFile/:id', async (req, res) => {
+
+    try {
+        let id = req.params.id
+
+        const user = await User.findOneAndUpdate({ email: 'namit@gmail.com' }, { $pull: { Files: id } })
+        console.log(user);
+
+
 
     } catch (err) {
         res.send(err);

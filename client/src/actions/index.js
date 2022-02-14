@@ -173,18 +173,34 @@ export const fileUpload = (files) => {
                     }
                 })
                 .catch(err => {
-                    toast.error(err, { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
+                    dispatch({ type: LOADER })
+
+                    toast.error("File upload failed", { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
+
                 });
         }
     )
 }
-export const fetchFilesUsers = () => {
+export const fetchFilesUsers = (pageNumber) => {
     return (
         (dispatch) => {
-            Axios.get('/fetchFiles')
+            Axios.get(`/fetchFiles/?Page=${pageNumber}`)
                 .then(res => {
-                    console.log(res.data);
                     dispatch({ type: FETCH_FILES, payload: res.data })
+                })
+                .catch(err => {
+
+                })
+        }
+    )
+}
+export const deleteFiles = (id) => {
+    return (
+        (dispatch) => {
+            window.confirm("Are you sure Delete this File")
+            Axios.get(`/deleteFile/${id}`)
+                .then(res => {
+
                 })
                 .catch(err => {
 

@@ -10,7 +10,8 @@ const initialState = {
     newState: [],
     newcities: [],
     page: [],
-    files: [],
+    pageNumberForFiles: [],
+    usersFiles: [],
     loginStatus: true,
     emailExist: false,
     deleteUser: false,
@@ -78,7 +79,8 @@ const employeeReducer = (state = initialState, action) => {
         case FETCH_FILES:
             return {
                 ...state,
-                files: action.payload.Files
+                usersFiles: action.payload.result,
+                pageNumberForFiles: action.payload.totalPage
             }
 
         default:

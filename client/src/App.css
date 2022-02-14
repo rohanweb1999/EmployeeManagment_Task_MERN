@@ -281,6 +281,7 @@ img {
 .pagination {
   padding-left: 40%;
   height: 100vh;
+  margin-top: 20%;
 }
 .DropDownMenu {
   display: flex;
@@ -323,11 +324,22 @@ input.form-control:focus {
 .showFiles {
   font-size: large;
   justify-content: center;
-  display: flex;
+  display: inline-grid;
+  padding-left: 15px;
+  width: min-content;
+  background-color: lightgrey;
+  margin-left: 10px;
 }
-img {
+
+#img {
   vertical-align: middle;
   border-style: none;
-  width: 40px;
-  height: 40px;
+  width: 100px;
+  height: 100px;
+  margin: auto;
+}
+.mainContainor {
+  display: table;
+  display: flex;
+  justify-content: center;
 }
