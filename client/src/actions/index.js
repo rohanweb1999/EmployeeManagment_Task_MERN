@@ -121,6 +121,8 @@ export const loginUserData = (data) => {
         Axios.post(`/signIn`, data)
             .then((res) => {
                 toast.success('Login successfully', { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
+                localStorage.setItem("login", true)
+
                 dispatch({ type: LOGIN_USER })
             })
             .catch(err => {
@@ -134,6 +136,8 @@ export const loginUserData = (data) => {
 export const logoutUser = () => {
     Axios.get(`/logout`)
         .then(() => {
+            localStorage.clear("login", true)
+
             toast.info('Logout', { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
         })
     return {

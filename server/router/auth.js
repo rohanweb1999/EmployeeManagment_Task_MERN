@@ -365,6 +365,7 @@ router.get('/fetchFiles', authenticate, async (req, res) => {
         let limit = 5
         let skip = (Page - 1) * limit
         const totalFiles = req.authenticateUser.Files;
+        const loginAuthenticateUser = req.authenticateUser
 
         let totalPage = Math.ceil(totalFiles.length / limit);
         const aggreagteQuery = [];
@@ -385,7 +386,7 @@ router.get('/fetchFiles', authenticate, async (req, res) => {
         );
         const result = await User.aggregate([aggreagteQuery]);
 
-        res.send({ result, totalPage })
+        res.send({ result, totalPage, loginAuthenticateUser })
 
     } catch (err) {
         res.send(err);

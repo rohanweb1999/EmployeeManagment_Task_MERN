@@ -27,12 +27,8 @@ import Cookies from 'js-cookie'
 
 export const loginContext = createContext();
 const App = () => {
-  const [cookie, setCookie] = useState()
-  useEffect(() => {
-    const cookie = Cookies.get('jwtLogin')
-    setCookie(cookie)
+  const cookie = Cookies.get('jwtLogin')
 
-  }, [cookie])
   const loginStatus = useSelector(state => state.employeeReducer.loginStatus)
   return (
     <>
@@ -42,11 +38,17 @@ const App = () => {
           <Route exact path="/" component={Home} />
           <Route path="/signUp" component={Signup} />
           <Route path="/editUser/:id" component={Signup} />
-          <ProtectedRoute path="/uploadFiles" component={UploadFiles} authStatus={loginStatus} />
-          <ProtectedRoute exact path="/logout" component={Signin} authStatus={loginStatus} />
-          <ProtectedRoute exact path="/dashboard" component={Dashboard} authStatus={loginStatus} />
+          <ProtectedRoute path="/uploadFiles" component={UploadFiles} authStatus={cookie} />
+          <Route exact path="/logout" component={Signin} />
+          <ProtectedRoute exact path="/dashboard" component={Dashboard} authStatus={cookie} />
           {
-            loginStatus !== false ? <Route exact path="/signIn" component={Signin} /> : <Redirect to="/dashboard" />
+            cookie === undefined || loginStatus === true ? (
+              <>
+                <Route exact path='/signIn' component={Signin} />
+
+                <Route exact path='/signUp' component={Signup} />
+              </>
+            ) : <Redirect to='/Dashboard' />
           }
 
           <Route path="*" component={PagenotFound} />

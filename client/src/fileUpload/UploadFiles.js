@@ -58,15 +58,7 @@ const UploadFiles = () => {
         dispatch(deleteFiles(id))
     }
     const setValue = (e) => {
-        if (multipleChecked.includes(e.target.value) && multipleChecked >= 1) {
-            const checkedmyArray = multipleChecked.filter((i) => {
-                return i !== e.target.value;
-            });
-            setmultipleChecked(checkedmyArray);
-        } else {
-            setmultipleChecked([...multipleChecked, e.target.value]);
-        }
-
+        setmultipleChecked([...multipleChecked, e.target.value])
     }
     return (
         <>
@@ -138,7 +130,7 @@ const UploadFiles = () => {
                                     {
                                         items.filename.includes('.jpeg') || items.filename.includes('.jpg') ?
                                             (<div className='showFiles'>
-                                                <input type="checkbox" ></input>
+                                                <input type="checkbox" value={items.public_id} onChange={(e) => setValue(e)}></input>
 
                                                 <img src={items.filepath} alt='txt' id='img' />
                                                 <b>{items.filename}</b>

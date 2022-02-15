@@ -30,7 +30,9 @@ const employeeReducer = (state = initialState, action) => {
                 page: action.payload.totalPage,
                 loginAuthenticateUser: action.payload.loginAuthenticateUser,
                 emailExist: false,
-                deleteUser: false
+                deleteUser: false,
+                loginStatus: false
+
             }
 
         case GET_ALL_COUNTRY: return { ...state, data: action.payload }
@@ -82,7 +84,9 @@ const employeeReducer = (state = initialState, action) => {
                 ...state,
                 usersFiles: action.payload.result,
                 pageNumberForFiles: action.payload.totalPage,
-                deleteFileToggle: false
+                deleteFileToggle: false,
+                loginStatus: false,
+                loginAuthenticateUser: action.payload.loginAuthenticateUser
             }
         case DELETE_TOGGLE_FILES:
             return {
