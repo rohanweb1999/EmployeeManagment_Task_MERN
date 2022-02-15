@@ -80,6 +80,10 @@ const userSchema = new mongoose.Schema({
             filetype: {
                 type: String
             },
+            public_id: {
+                type: String
+
+            },
         }
     ],
     Token: [

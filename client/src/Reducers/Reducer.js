@@ -1,7 +1,7 @@
 /**
  * @author Rohan Gajjar
  */
-import { SUBMIT_DATA, GET_DATA, ASSENDINGORDERDATA, PAGGINATION, GET_ALL_COUNTRY, GET_STATE, GET_CITIES, LOGIN_USER, LOGOUT_USER, UPDATE_USER, DELETE_SELECT_EMPLOYEE, VALID_REGISTER_CHECK, FILE_UPLOAD, FETCH_FILES, LOADER } from "../actions/Type"
+import { SUBMIT_DATA, GET_DATA, ASSENDINGORDERDATA, PAGGINATION, GET_ALL_COUNTRY, GET_STATE, GET_CITIES, LOGIN_USER, LOGOUT_USER, UPDATE_USER, DELETE_SELECT_EMPLOYEE, VALID_REGISTER_CHECK, FILE_UPLOAD, FETCH_FILES, LOADER, DELETE_TOGGLE_FILES } from "../actions/Type"
 
 const initialState = {
     loginAuthenticateUser: "",
@@ -16,7 +16,8 @@ const initialState = {
     emailExist: false,
     deleteUser: false,
     validUser: false,
-    loader: false
+    loader: false,
+    deleteFileToggle: false
 }
 
 const employeeReducer = (state = initialState, action) => {
@@ -80,9 +81,14 @@ const employeeReducer = (state = initialState, action) => {
             return {
                 ...state,
                 usersFiles: action.payload.result,
-                pageNumberForFiles: action.payload.totalPage
+                pageNumberForFiles: action.payload.totalPage,
+                deleteFileToggle: false
             }
-
+        case DELETE_TOGGLE_FILES:
+            return {
+                ...state,
+                deleteFileToggle: true
+            }
         default:
             return state;
     }

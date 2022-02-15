@@ -340,11 +340,12 @@ router.post('/upload-files', authenticate, upload.array('multi-files'), async (r
         for (const file of files) {
 
             const { path } = file;
-            const uploadFiles = await cloudinary.uploader.upload(path, { resource_type: 'auto' })
+            const uploadFiles = await cloudinary.uploader.upload(path, { resource_type: 'raw' })
             const File = {
                 filename: file.originalname,
                 filepath: uploadFiles.secure_url,
-                filetype: uploadFiles.format
+                filetype: uploadFiles.format,
+                public_id: uploadFiles.public_id
             }
             await User.updateOne({ email: req.authenticateUser.email }, { $push: { Files: File } });
         }
@@ -366,7 +367,6 @@ router.get('/fetchFiles', authenticate, async (req, res) => {
         const totalFiles = req.authenticateUser.Files;
 
         let totalPage = Math.ceil(totalFiles.length / limit);
-        console.log(totalPage);
         const aggreagteQuery = [];
 
         aggreagteQuery.push(
@@ -384,7 +384,6 @@ router.get('/fetchFiles', authenticate, async (req, res) => {
             },
         );
         const result = await User.aggregate([aggreagteQuery]);
-        console.log(result);
 
         res.send({ result, totalPage })
 
@@ -392,16 +391,17 @@ router.get('/fetchFiles', authenticate, async (req, res) => {
         res.send(err);
     }
 })
-router.get('/deleteFile/:id', async (req, res) => {
+router.get('/deleteFile/:id', authenticate, async (req, res) => {
 
     try {
-        let id = req.params.id
 
-        const user = await User.findOneAndUpdate({ email: 'namit@gmail.com' }, { $pull: { Files: id } })
-        console.log(user);
-
-
-
+        const id = req.params.id;
+        const xyz = await cloudinary.uploader.destroy(id, { invalidate: true, resource_type: "raw" });
+        const result = await User.updateOne(
+            { email: req.authenticateUser.email },
+            { $pull: { Files: { public_id: id } } }
+        )
+        res.send({ msg: "delete successfully!" })
     } catch (err) {
         res.send(err);
     }

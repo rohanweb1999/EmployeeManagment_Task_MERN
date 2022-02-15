@@ -2,7 +2,7 @@
  * @author Rohan Gajjar
  */
 //////////////////// Load module start //////////////////////////////
-import React, { createContext } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import './App.css';
 import {
   BrowserRouter as Router,
@@ -20,12 +20,19 @@ import Navbar from './Navbar';
 import UploadFiles from './fileUpload/UploadFiles'
 import ProtectedRoute from './ProtectedRoute';
 import { useSelector } from 'react-redux';
+import Cookies from 'js-cookie'
+
 //////////////////// Load module end /////////////////////////////////////////
 
 
 export const loginContext = createContext();
 const App = () => {
+  const [cookie, setCookie] = useState()
+  useEffect(() => {
+    const cookie = Cookies.get('jwtLogin')
+    setCookie(cookie)
 
+  }, [cookie])
   const loginStatus = useSelector(state => state.employeeReducer.loginStatus)
   return (
     <>

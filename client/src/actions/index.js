@@ -2,7 +2,7 @@
  * @author Rohan Gajjar
  */
 ////////////////    start load Modules //////////////////////////////////////
-import { DELETE_SELECT_EMPLOYEE, FETCH_FILES, FILE_UPLOAD, GET_ALL_COUNTRY, GET_CITIES, GET_DATA, GET_STATE, LOADER, LOGIN_USER, LOGOUT_USER, SELECT_EDIT_LIST, SERCH_USER_DATA, SUBMIT_DATA, UPDATE_USER, VALID_REGISTER_CHECK } from "../actions/Type"
+import { DELETE_SELECT_EMPLOYEE, DELETE_TOGGLE_FILES, FETCH_FILES, FILE_UPLOAD, GET_ALL_COUNTRY, GET_CITIES, GET_DATA, GET_STATE, LOADER, LOGIN_USER, LOGOUT_USER, SELECT_EDIT_LIST, SERCH_USER_DATA, SUBMIT_DATA, UPDATE_USER, VALID_REGISTER_CHECK } from "../actions/Type"
 import Axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -176,7 +176,6 @@ export const fileUpload = (files) => {
                     dispatch({ type: LOADER })
 
                     toast.error("File upload failed", { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
-
                 });
         }
     )
@@ -200,9 +199,13 @@ export const deleteFiles = (id) => {
             window.confirm("Are you sure Delete this File")
             Axios.get(`/deleteFile/${id}`)
                 .then(res => {
+                    const msg = res.data.msg
+                    toast.success(msg, { position: toast.POSITION.TOP_CENTER, autoClose: 2000 });
+                    dispatch({ type: DELETE_TOGGLE_FILES })
 
                 })
                 .catch(err => {
+                    toast.error("Something went wrong", { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
 
                 })
         }
