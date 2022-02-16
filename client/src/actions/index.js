@@ -2,7 +2,7 @@
  * @author Rohan Gajjar
  */
 ////////////////    start load Modules //////////////////////////////////////
-import { DELETE_SELECT_EMPLOYEE, DELETE_TOGGLE_FILES, FETCH_FILES, FILE_UPLOAD, GET_ALL_COUNTRY, GET_CITIES, GET_DATA, GET_STATE, LOADER, LOGIN_USER, LOGOUT_USER, SELECT_EDIT_LIST, SERCH_USER_DATA, SUBMIT_DATA, UPDATE_USER, VALID_REGISTER_CHECK } from "../actions/Type"
+import { DELETE_MULTI_FILES, DELETE_SELECT_EMPLOYEE, DELETE_TOGGLE_FILES, FETCH_FILES, FILE_UPLOAD, GET_ALL_COUNTRY, GET_CITIES, GET_DATA, GET_STATE, LOADER, LOGIN_USER, LOGOUT_USER, SELECT_EDIT_LIST, SERCH_USER_DATA, SUBMIT_DATA, UPDATE_USER, VALID_REGISTER_CHECK } from "../actions/Type"
 import Axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -198,11 +198,10 @@ export const fetchFilesUsers = (pageNumber) => {
     )
 }
 export const deleteFiles = (id) => {
-    console.log(id);
     return (
         (dispatch) => {
             window.confirm("Are you sure Delete this File")
-            Axios.get(`/deleteFile/${id}`)
+            Axios.delete(`/deleteFile/${id}`)
                 .then(res => {
                     const msg = res.data.msg
                     toast.success(msg, { position: toast.POSITION.TOP_CENTER, autoClose: 2000 });
@@ -215,4 +214,21 @@ export const deleteFiles = (id) => {
                 })
         }
     )
+}
+export const DeleteMulti_File = (id) => {
+
+    return (dispatch) => {
+        window.confirm("Are you sure Delete this File")
+
+        Axios.put(`/deleteMultiFiles`, id)
+            .then((res) => {
+                toast.success(res.data.msg, { position: toast.POSITION.TOP_CENTER, autoClose: 2000 });
+                dispatch({ type: DELETE_MULTI_FILES });
+            })
+            .catch(() => {
+                dispatch({ type: DELETE_MULTI_FILES });
+
+                toast.error("Something went wrong", { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
+            });
+    }
 }

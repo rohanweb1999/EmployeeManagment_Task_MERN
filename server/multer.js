@@ -20,7 +20,7 @@ module.exports = multer({
         if (ext !== '.jpg' && ext !== '.jpeg'
             && ext !== '.png' && ext !== '.pdf'
             && ext !== '.doc' && ext !== '.txt'
-            && ext !== '.docx' && ext !== '.xml') {
+            && ext !== '.docx' && ext !== '.xml' && ext !== '.gif') {
             cb(new Error("File Type is Not supported"), false);
             return;
         }

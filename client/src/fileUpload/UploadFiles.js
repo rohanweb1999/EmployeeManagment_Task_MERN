@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { deleteFiles, fetchFilesUsers, fileUpload, loaderToggle } from '../actions';
+import { deleteFiles, DeleteMulti_File, fetchFilesUsers, fileUpload, loaderToggle } from '../actions';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Box from '@mui/material/Box';
@@ -19,12 +19,15 @@ const UploadFiles = () => {
     const [files, setFiles] = useState('')
     const [pageNumber, setpageNumber] = useState(1)
     const [multipleChecked, setmultipleChecked] = useState([])
+    const [selectedAssest, setselectedAssest] = useState(0)
+
 
     // const loginAuthenticateUser = useSelector(state => state.employeeReducer.loginAuthenticateUser)
     const loader = useSelector(state => state.employeeReducer.loader)
     const usersFiles = useSelector(state => state.employeeReducer.usersFiles)
     const pageNumberForFiles = useSelector(state => state.employeeReducer.pageNumberForFiles)
     const deleteFileToggle = useSelector(state => state.employeeReducer.deleteFileToggle)
+
     console.log("multipleChecked", multipleChecked);
 
     // const { Files } = loginAuthenticateUser
@@ -33,6 +36,8 @@ const UploadFiles = () => {
 
 
     useEffect(() => {
+        setmultipleChecked([])
+        setselectedAssest(0)
         dispatch(fetchFilesUsers(pageNumber))
     }, [loader, pageNumber, deleteFileToggle])
 
@@ -54,8 +59,16 @@ const UploadFiles = () => {
             dispatch(fileUpload(formData))
         }
     }
-    const handleDelete = () => {
-        dispatch(deleteFiles(multipleChecked))
+    const handleDelete = (id) => {
+        dispatch(deleteFiles(id))
+    }
+    const deleteMultiFile = (e) => {
+        console.log(multipleChecked.length);
+        if (multipleChecked.length === 0) {
+            toast.error("Choose atleast 1 or more Files", { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
+        } else {
+            dispatch(DeleteMulti_File(multipleChecked))
+        }
     }
     const checkbocTickButton = (id) => {
         // setmultipleChecked([...multipleChecked, e.target.value])
@@ -65,9 +78,12 @@ const UploadFiles = () => {
                 return i !== id;
             });
             setmultipleChecked(checkedmyArray);
+            setselectedAssest(selectedAssest - 1)
+
         }
         else {
             setmultipleChecked([...multipleChecked, id]);
+            setselectedAssest(selectedAssest + 1)
         }
     }
     return (
@@ -98,16 +114,26 @@ const UploadFiles = () => {
                         </>) : (
 
                         <>
+                            {
+
+                                selectedAssest === 0 ? null : <h1>{`${selectedAssest} assets selected.`}</h1>
+                            }
                             <div className='mainWrapper'>
+
+
                                 <form onSubmit={handleSubmit}>
                                     <input type='file' disabled={loader} name='files' onChange={(e) => setFiles({ ...files, ...e.target.files })} multiple></input>
 
                                     <button type='submit' disabled={loader}>UPLOAD</button>
                                 </form>
                             </div>
-                            <div>
-                                <input type="checkbox" />select All
-                            </div>
+                            {
+                                selectedAssest === 0 ? null : (<div>
+                                    <button onClick={() => deleteMultiFile()}>Delete Select File</button>
+
+                                </div>)
+                            }
+
                         </>
 
 
@@ -127,11 +153,11 @@ const UploadFiles = () => {
                                     {
                                         items.filename.includes('.pdf') ?
                                             (<div className='showFiles'>
-                                                <input type="checkbox" onChange={() => checkbocTickButton(items._id)}></input>
+                                                <input type="checkbox" className="checkbox" onChange={() => checkbocTickButton(items._id)}></input>
                                                 <img src='https://icons.iconarchive.com/icons/graphicloads/filetype/128/pdf-icon.png' alt='pdf' id='img' />
                                                 <b>{items.filename}</b>
 
-                                                <div> <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => handleDelete()}>
+                                                <div> <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => handleDelete(items._id)}>
                                                     Delete
                                                 </Button></div></div>)
                                             : null
@@ -140,11 +166,11 @@ const UploadFiles = () => {
                                     {
                                         items.filename.includes('.jpeg') || items.filename.includes('.jpg') ?
                                             (<div className='showFiles'>
-                                                <input type="checkbox" onChange={() => checkbocTickButton(items._id)}></input>
+                                                <input type="checkbox" className="checkbox" onChange={() => checkbocTickButton(items._id)}></input>
 
                                                 <img src={items.filepath} alt='txt' id='img' />
                                                 <b>{items.filename}</b>
-                                                <div><Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => handleDelete()}>
+                                                <div><Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => handleDelete(items._id)}>
                                                     Delete
                                                 </Button></div></div>)
                                             : null
@@ -153,12 +179,12 @@ const UploadFiles = () => {
                                     {
                                         items.filename.includes('.doc') ?
                                             (<div className='showFiles'>
-                                                <input type="checkbox" onChange={() => checkbocTickButton(items._id)}></input>
+                                                <input type="checkbox" className="checkbox" onChange={() => checkbocTickButton(items._id)}></input>
 
                                                 <img src='https://freeiconshop.com/wp-content/uploads/edd/doc-flat.png' alt='doc' id='img' />
                                                 <b>{items.filename}</b>
 
-                                                <div><Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => handleDelete()}>
+                                                <div><Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => handleDelete(items._id)}>
                                                     Delete
                                                 </Button></div></div>)
                                             : null
@@ -166,12 +192,12 @@ const UploadFiles = () => {
                                     {
                                         items.filename.includes('.png') ?
                                             (<div className='showFiles'>
-                                                <input type="checkbox" onChange={() => checkbocTickButton(items._id)} ></input>
+                                                <input type="checkbox" className="checkbox" onChange={() => checkbocTickButton(items._id)} ></input>
 
                                                 <img src={items.filepath} alt='png' id='img' />
                                                 <b>{items.filename}</b>
 
-                                                <div><Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => handleDelete()}>
+                                                <div><Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => handleDelete(items._id)}>
                                                     Delete
                                                 </Button></div></div>)
                                             : null
@@ -180,12 +206,12 @@ const UploadFiles = () => {
                                     {
                                         items.filename.includes('.txt') ?
                                             (<div className='showFiles'>
-                                                <input type="checkbox" onChange={() => checkbocTickButton(items._id)} ></input>
+                                                <input type="checkbox" className="checkbox" onChange={() => checkbocTickButton(items._id)} ></input>
 
                                                 <img src='https://cdn-icons-png.flaticon.com/128/3022/3022305.png' alt='txt' id='img' />
                                                 <b>{items.filename}</b>
 
-                                                <div><Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => handleDelete()}>
+                                                <div><Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => handleDelete(items._id)}>
                                                     Delete
                                                 </Button></div></div>)
                                             : null
@@ -193,12 +219,25 @@ const UploadFiles = () => {
                                     {
                                         items.filename.includes('.xml') ?
                                             (<div className='showFiles'>
-                                                <input type="checkbox" onChange={() => checkbocTickButton(items._id)}></input>
+                                                <input type="checkbox" className="checkbox" onChange={() => checkbocTickButton(items._id)}></input>
 
                                                 <img src='https://w7.pngwing.com/pngs/47/832/png-transparent-microsoft-excel-computer-icons-spreadsheet-txt-file-miscellaneous-angle-text.png' alt='xml' id='img' />
                                                 <b>{items.filename}</b>
 
-                                                <div><Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => handleDelete()}>
+                                                <div><Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => handleDelete(items._id)}>
+                                                    Delete
+                                                </Button></div></div>)
+                                            : null
+                                    }
+                                    {
+                                        items.filename.includes('.gif') ?
+                                            (<div className='showFiles'>
+                                                <input type="checkbox" className="checkbox" onChange={() => checkbocTickButton(items._id)}></input>
+
+                                                <img src={items.filepath} alt='xml' id='img' />
+                                                <b>{items.filename}</b>
+
+                                                <div><Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => handleDelete(items._id)}>
                                                     Delete
                                                 </Button></div></div>)
                                             : null

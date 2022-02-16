@@ -392,10 +392,8 @@ router.get('/fetchFiles', authenticate, async (req, res) => {
         res.send(err);
     }
 })
-router.get('/deleteFile/:id', authenticate, async (req, res) => {
-
+router.delete('/deleteFile/:id', authenticate, async (req, res) => {
     try {
-
         const id = req.params.id;
         const xyz = await cloudinary.uploader.destroy(id, { invalidate: true, resource_type: "raw" });
         const result = await User.updateOne(
@@ -403,6 +401,26 @@ router.get('/deleteFile/:id', authenticate, async (req, res) => {
             { $pull: { Files: { _id: id } } }
         )
         res.send({ msg: "delete successfully!" })
+    } catch (err) {
+        res.send(err);
+    }
+})
+router.put(`/deleteMultiFiles`, authenticate, async (req, res) => {
+
+    try {
+
+        const ids = req.body;
+
+        for (const id of ids) {
+
+            const database = await User.updateOne(
+                { email: req.authenticateUser.email },
+                { $pull: { Files: { _id: id } } }
+            )
+
+        }
+        res.send({ msg: "Multiple Files Deleted Sucessfully" })
+
     } catch (err) {
         res.send(err);
     }
