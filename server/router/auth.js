@@ -400,7 +400,7 @@ router.get('/deleteFile/:id', authenticate, async (req, res) => {
         const xyz = await cloudinary.uploader.destroy(id, { invalidate: true, resource_type: "raw" });
         const result = await User.updateOne(
             { email: req.authenticateUser.email },
-            { $pull: { Files: { public_id: id } } }
+            { $pull: { Files: { _id: id } } }
         )
         res.send({ msg: "delete successfully!" })
     } catch (err) {

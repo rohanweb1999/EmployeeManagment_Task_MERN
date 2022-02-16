@@ -16,15 +16,13 @@ import { useState } from 'react';
 
 
 const Navbar = () => {
-    const [toggle, setToggle] = useState(false)
     const history = useHistory()
     const dispatch = useDispatch()
     const loginAuthenticateUser = useSelector(state => state.employeeReducer.loginAuthenticateUser)
+    const loader = useSelector(state => state.employeeReducer.loader)
     const loginStatus = useSelector(state => state.employeeReducer.loginStatus)
-    console.log(loginStatus);
-    const cookie = Cookies.get('jwtLogin')
+    // const cookie = Cookies.get('jwtLogin')
     const logout = () => {
-        setToggle(false)
         history.push('/')
         dispatch(logoutUser())
     }
@@ -42,8 +40,8 @@ const Navbar = () => {
                     {
                         loginStatus === false ? (
                             <>
-                                <NavLink to="/uploadFiles"><button className='uploadFiles'> UPLOAD FILES</button></NavLink>
-                                <button className='logout-btn' onClick={() => logout()}>LOG OUT</button>
+                                <NavLink to="/uploadFiles"><button className='uploadFiles' > UPLOAD FILES</button></NavLink>
+                                <button className='logout-btn' onClick={() => logout()} disabled={loader}>LOG OUT</button>
                             </>) : (
                             <>
                                 <NavLink to="/Signup" id="btn2" ><button className='reg-btn' >Registration</button></NavLink>

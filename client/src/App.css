@@ -140,6 +140,23 @@ img {
   margin-left: 15px;
 }
 .logout-btn {
+  opacity: 1;
+  background-color: #f56464; /* Green */
+  border: none;
+  color: white;
+  padding: 10px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  cursor: pointer;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  border-radius: 5px 5px 5px 5px;
+  margin-left: 15px;
+  height: 50px;
+}
+.logout-btn2 {
   background-color: #f56464; /* Green */
   border: none;
   color: white;

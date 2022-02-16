@@ -198,6 +198,7 @@ export const fetchFilesUsers = (pageNumber) => {
     )
 }
 export const deleteFiles = (id) => {
+    console.log(id);
     return (
         (dispatch) => {
             window.confirm("Are you sure Delete this File")
