@@ -16,23 +16,25 @@ toast.configure()
 
 const UploadFiles = () => {
 
+    /////////////*****UseState start********//////////////////////////// */
     const [files, setFiles] = useState('')
     const [pageNumber, setpageNumber] = useState(1)
     const [multipleChecked, setmultipleChecked] = useState([])
     const [selectedAssest, setselectedAssest] = useState(0)
+    const [unSupportedFiles, setunSupportedFiles] = useState([])
+    /////////////*****UseState end********//////////////////////////// */
 
 
-    // const loginAuthenticateUser = useSelector(state => state.employeeReducer.loginAuthenticateUser)
+    /////////////*****useSelector start********//////////////////////////// */
     const loader = useSelector(state => state.employeeReducer.loader)
     const usersFiles = useSelector(state => state.employeeReducer.usersFiles)
     const pageNumberForFiles = useSelector(state => state.employeeReducer.pageNumberForFiles)
     const deleteFileToggle = useSelector(state => state.employeeReducer.deleteFileToggle)
+    /////////////*****useSelector end********//////////////////////////// */
 
     console.log("multipleChecked", multipleChecked);
 
-    // const { Files } = loginAuthenticateUser
     const dispatch = useDispatch();
-    // const history = useHistory()
 
 
     useEffect(() => {
@@ -48,6 +50,7 @@ const UploadFiles = () => {
             toast.error("Please Choose File", { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
         }
         else {
+
             e.preventDefault();
             dispatch(loaderToggle())
             const formData = new FormData();
@@ -86,6 +89,10 @@ const UploadFiles = () => {
             setselectedAssest(selectedAssest + 1)
         }
     }
+    const handleChangeFile = (e) => {
+
+        setFiles({ ...files, ...e.target.files })
+    }
     return (
         <>
             <div>
@@ -116,13 +123,13 @@ const UploadFiles = () => {
                         <>
                             {
 
-                                selectedAssest === 0 ? null : <h1>{`${selectedAssest} assets selected.`}</h1>
+                                selectedAssest === 0 ? null : <h1>{`${selectedAssest} File selected.`}</h1>
                             }
                             <div className='mainWrapper'>
 
 
                                 <form onSubmit={handleSubmit}>
-                                    <input type='file' disabled={loader} name='files' onChange={(e) => setFiles({ ...files, ...e.target.files })} multiple></input>
+                                    <input type='file' disabled={loader} name='files' onChange={(e) => handleChangeFile(e)} multiple></input>
 
                                     <button type='submit' disabled={loader}>UPLOAD</button>
                                 </form>

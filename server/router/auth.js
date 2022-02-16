@@ -14,6 +14,7 @@ const State = require('../models/stateSchema')
 require('../db/conn');
 const upload = require('../multer')
 const cloudinary = require('../cloudinary')
+const path = require('path');
 
 ////////////////////// Load module end///////////////////////////////////////////////////
 
@@ -336,23 +337,34 @@ router.post('/upload-files', authenticate, upload.array('multi-files'), async (r
     try {
 
         const files = req.files;
-
+        const unSupportedFiles = [];
         for (const file of files) {
 
-            const { path } = file;
-            const uploadFiles = await cloudinary.uploader.upload(path, { resource_type: 'raw' })
-            const File = {
-                filename: file.originalname,
-                filepath: uploadFiles.secure_url,
-                filetype: uploadFiles.format,
-                public_id: uploadFiles.public_id
+            const type = path.extname(file.originalname)
+            console.log("type", type);
+            if (type !== '.jpg' && type !== '.jpeg' && type !== '.png' && type !== '.pdf' && type !== '.doc' && type !== '.txt' && type !== '.docx') {
+                unSupportedFiles.push(file.originalname)
             }
-            await User.updateOne({ email: req.authenticateUser.email }, { $push: { Files: File } });
+            else {
+                const uploadFiles = await cloudinary.uploader.upload(file.path, { resource_type: 'raw' });
+                const File = {
+                    filename: file.originalname,
+                    filepath: uploadFiles.secure_url,
+                    filetype: type,
+                    public_id: uploadFiles.public_id,
+
+                }
+
+                await User.updateOne({ email: req.authenticateUser.email }, { $push: { Files: File } });
+            }
         }
         const loader = false
-        res.send({ msg: "File  Uploaded Succeessfully!! ", loader });
+        // res.send({ msg: "File  Uploaded Succeessfully!! ", loader });
 
-    } catch (err) {
+        res.send({ msg: "File Uploaded Succeessfully!!", loader, unSupportedFiles });
+
+    }
+    catch (err) {
         res.status(400).send({ error: "File Not Upload" })
 
     }

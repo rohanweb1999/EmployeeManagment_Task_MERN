@@ -170,10 +170,16 @@ export const fileUpload = (files) => {
             dispatch({ type: FILE_UPLOAD })
             Axios.post('/upload-files', files)
                 .then(res => {
+                    console.log("res.data", res.data);
                     const msg = res.data.msg
+                    const unsupportfile = res.data.unSupportedFiles
+                    console.log("unsupportfile", unsupportfile);
                     toast.success(msg, { position: toast.POSITION.TOP_CENTER, autoClose: 2000 });
                     if (msg) {
                         dispatch({ type: LOADER, paylaod: res.data })
+                    }
+                    if (unsupportfile.length !== 0) {
+                        alert(`${unsupportfile} files are not uploaded`)
                     }
                 })
                 .catch(err => {
