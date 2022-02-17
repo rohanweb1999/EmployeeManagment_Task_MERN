@@ -341,7 +341,6 @@ router.post('/upload-files', authenticate, upload.array('multi-files'), async (r
         for (const file of files) {
 
             const type = path.extname(file.originalname)
-            console.log("type", type);
             if (type !== '.jpg' && type !== '.jpeg' && type !== '.png' && type !== '.pdf' && type !== '.doc' && type !== '.txt' && type !== '.docx') {
                 unSupportedFiles.push(file.originalname)
             }
@@ -383,6 +382,7 @@ router.get('/fetchFiles', authenticate, async (req, res) => {
         const aggreagteQuery = [];
 
         aggreagteQuery.push(
+
             {
                 $match: {
                     Files: req.authenticateUser.Files

@@ -110,7 +110,7 @@ img {
   margin-right: 15px;
 }
 .reg-btn {
-  background-color: #58a1f5; /* Green */
+  background-color: #58a1f5;
   border: none;
   color: white;
   padding: 10px 16px;
@@ -119,13 +119,13 @@ img {
   display: inline-block;
   margin: 4px 2px;
   cursor: pointer;
-  -webkit-transition-duration: 0.4s; /* Safari */
+  -webkit-transition-duration: 0.4s;
   transition-duration: 0.4s;
   border-radius: 5px 5px 5px 5px;
   margin-left: 15px;
 }
 .signin-btn {
-  background-color: #3b8a16; /* Green */
+  background-color: #3b8a16;
   border: none;
   color: white;
   padding: 10px 16px;
@@ -134,14 +134,14 @@ img {
   display: inline-block;
   margin: 4px 2px;
   cursor: pointer;
-  -webkit-transition-duration: 0.4s; /* Safari */
+  -webkit-transition-duration: 0.4s;
   transition-duration: 0.4s;
   border-radius: 5px 5px 5px 5px;
   margin-left: 15px;
 }
 .logout-btn {
   opacity: 1;
-  background-color: #f56464; /* Green */
+  background-color: #f56464;
   border: none;
   color: white;
   padding: 10px 16px;
@@ -150,14 +150,14 @@ img {
   display: inline-block;
   margin: 4px 2px;
   cursor: pointer;
-  -webkit-transition-duration: 0.4s; /* Safari */
+  -webkit-transition-duration: 0.4s;
   transition-duration: 0.4s;
   border-radius: 5px 5px 5px 5px;
   margin-left: 15px;
   height: 50px;
 }
 .logout-btn2 {
-  background-color: #f56464; /* Green */
+  background-color: #f56464;
   border: none;
   color: white;
   padding: 10px 16px;
@@ -166,7 +166,7 @@ img {
   display: inline-block;
   margin: 4px 2px;
   cursor: pointer;
-  -webkit-transition-duration: 0.4s; /* Safari */
+  -webkit-transition-duration: 0.4s;
   transition-duration: 0.4s;
   border-radius: 5px 5px 5px 5px;
   margin-left: 15px;
@@ -177,7 +177,7 @@ img {
   background-color: #ec2f16;
 }
 .uploadFiles {
-  background-color: #4245f8; /* Green */
+  background-color: #4245f8;
   border: none;
   color: white;
   padding: 10px 16px;
@@ -186,7 +186,7 @@ img {
   display: inline-block;
   margin: 4px 2px;
   cursor: pointer;
-  -webkit-transition-duration: 0.4s; /* Safari */
+  -webkit-transition-duration: 0.4s;
   transition-duration: 0.4s;
   border-radius: 5px 5px 5px 5px;
   margin-left: 15px;
@@ -196,7 +196,7 @@ img {
   box-shadow: 0 6px 8px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
 }
 .dash-btn {
-  background-color: #f7b629; /* Green */
+  background-color: #f7b629;
   border: none;
   color: white;
   padding: 10px 16px;
@@ -205,7 +205,7 @@ img {
   display: inline-block;
   margin: 4px 2px;
   cursor: pointer;
-  -webkit-transition-duration: 0.4s; /* Safari */
+  -webkit-transition-duration: 0.4s;
   transition-duration: 0.4s;
   border-radius: 5px 5px 5px 5px;
   margin-right: 10px;
@@ -252,7 +252,7 @@ img {
   display: inline-block;
   margin: 4px 2px;
   cursor: pointer;
-  -webkit-transition-duration: 0.4s; /* Safari */
+  -webkit-transition-duration: 0.4s;
   transition-duration: 0.4s;
   border-radius: 5px 5px 5px 5px;
   margin-left: 15px;
@@ -270,7 +270,7 @@ img {
   display: inline-block;
   margin: 4px 2px;
   cursor: pointer;
-  -webkit-transition-duration: 0.4s; /* Safari */
+  -webkit-transition-duration: 0.4s;
   transition-duration: 0.4s;
   border-radius: 5px 5px 5px 5px;
   margin-left: 15px;
