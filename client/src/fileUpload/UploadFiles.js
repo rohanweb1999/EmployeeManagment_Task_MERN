@@ -19,12 +19,11 @@ const UploadFiles = () => {
     /////////////*****UseState start********//////////////////////////// */
     const [files, setFiles] = useState('')
     const [pageNumber, setpageNumber] = useState(1)
-    const [multipleChecked, setmultipleChecked] = useState([])
     const [selectedAssest, setselectedAssest] = useState(0)
-    const [selectId, setSelectId] = useState([])
     const [isCheckAll, setIsCheckAll] = useState(false);
     const [isCheck, setIsCheck] = useState([]);
-    console.log("multipleChecked", multipleChecked);
+    const [limit, setLimit] = useState(5)
+
 
 
     /////////////*****UseState end********//////////////////////////// */
@@ -37,19 +36,16 @@ const UploadFiles = () => {
     const deleteFileToggle = useSelector(state => state.employeeReducer.deleteFileToggle)
     /////////////*****useSelector end********//////////////////////////// */
 
+    console.log("usersFiles", usersFiles);
 
     const dispatch = useDispatch();
 
 
     useEffect(() => {
-        const newArray = usersFiles[0] && usersFiles[0].getFiles.length > 0 && usersFiles[0].getFiles.map((elem) => {
-            return { id: elem._id, isChecked: false }
-        })
-        setSelectId(newArray)
-        setmultipleChecked([])
+        setIsCheckAll(false);
         setselectedAssest(0)
-        dispatch(fetchFilesUsers(pageNumber))
-    }, [loader, pageNumber, deleteFileToggle])
+        dispatch(fetchFilesUsers(pageNumber, limit))
+    }, [loader, pageNumber, deleteFileToggle, limit])
 
 
     const handleSubmit = (e) => {
@@ -62,7 +58,7 @@ const UploadFiles = () => {
             e.preventDefault();
             dispatch(loaderToggle())
             const formData = new FormData();
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < 10; i++) {
                 formData.append('multi-files', files[i]);
             }
             e.target.reset()
@@ -98,13 +94,14 @@ const UploadFiles = () => {
     const handleClick = (e) => {
         const { id, checked } = e.target;
         setIsCheck([...isCheck, id]);
-
+        setIsCheckAll(false);
         if (!checked) {
             setIsCheck(isCheck.filter((item) => item !== id));
         }
     };
-
-    console.log("isCheck", isCheck);
+    const handleLimitChange = (e) => {
+        setLimit(e.target.value)
+    }
     return (
         <>
             <div>
@@ -155,11 +152,13 @@ const UploadFiles = () => {
                                     />
                                     Select All
                                 </div>
-                            </div>
-                            <div>
-                                <button onClick={() => deleteMultiFile()}>Delete Select File</button>
+
 
                             </div>
+                            {
+                                isCheck.length !== 0 ? <div><button onClick={() => deleteMultiFile()}>Delete Select File</button></div> : null
+                            }
+
 
 
                         </>
@@ -237,6 +236,15 @@ const UploadFiles = () => {
 
                 </div>
                 <div className="pagination" >
+                    <div>Files per page
+                        <select onChange={(e) => handleLimitChange(e)}>
+                            <option value={5}>5</option>
+                            <option value={10}>10</option>
+                            <option value={15}>15</option>
+                            <option value={20}>20</option>
+
+                        </select>
+                    </div>
                     <Pagination count={pageNumberForFiles} variant="outlined" shape="rounded" onChange={(e, value) => {
                         setpageNumber(value)
                     }} />

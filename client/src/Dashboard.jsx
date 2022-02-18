@@ -13,6 +13,7 @@ import 'animate.css';
 import Pagination from '@mui/material/Pagination';
 import debounce from 'lodash.debounce';
 import { deleteSelectEmployee, fetchData } from "./actions";
+import TablePagination from '@mui/material/TablePagination';
 
 toast.configure()
 //*******************************Load Module End******************************* */
@@ -22,8 +23,15 @@ const Dashboard = () => {
 
     ///////////********Usestate***********************///////// */
     const [pageNumber, setpageNumber] = useState(1)
+    const [limit, setLimit] = useState(2)
+
     const [selectOption, setselectOption] = useState("ascending")
     const [request, setRequest] = useState("")
+    // const [pagenumber, setPagenumber] = useState(1);
+    // const [rowsPerPage, setRowsPerPage] = useState(10);
+
+
+    console.log(limit, "limit");
     ///////////////UseSelector/////////////////////////////////
 
     const employeeList = useSelector(state => state.employeeReducer.employeeList)
@@ -33,6 +41,14 @@ const Dashboard = () => {
     const dispatch = useDispatch();
 
     ///////////////  UseEffect for Dispatch delete function API /////////////////////////////
+    // const handleChangePage = (event, newPage) => {
+    //     setPagenumber(newPage);
+    // };
+
+    // const handleChangeRowsPerPage = (event) => {
+    //     setRowsPerPage(parseInt(event.target.value, 10));
+    //     setPagenumber(0);
+    // };
     const handleDelete = (id) => {
 
         if (window.confirm("Confirm Delete User")) {
@@ -45,11 +61,13 @@ const Dashboard = () => {
         setRequest(event.target.value)
     }
     const debouncedOnChange = debounce(onchangeChandler, 500)
-
+    const handleLimitChange = (e) => {
+        setLimit(e.target.value)
+    }
     /////////////// Useeffect for  fetchdata /////////////////////////////
     useEffect((e) => {
-        dispatch(fetchData(pageNumber, selectOption, request))
-    }, [pageNumber, dispatch, selectOption, request, deleteUser])
+        dispatch(fetchData(pageNumber, selectOption, request, limit))
+    }, [pageNumber, dispatch, selectOption, request, deleteUser, limit])
 
 
     return (
@@ -142,13 +160,25 @@ const Dashboard = () => {
 
 
                         </div>
-                        <div className="pagination" >
+                        <span>
+                            <div>Rows per page
+                                <select onChange={(e) => handleLimitChange(e)}>
+                                    <option value={2}>2</option>
+                                    <option value={4}>4</option>
+                                    <option value={6}>6</option>
+                                    <option value={8}>8</option>
+                                    <option value={10}>10</option>
 
-                            <Pagination count={page} variant="outlined" color="secondary" onChange={(e, value) => {
-                                setpageNumber(value)
-                            }} />
-
-                        </div>
+                                </select>
+                            </div>
+                            <div className="pagination" >
+                                <Pagination
+                                    count={page}
+                                    variant="outlined"
+                                    color="secondary"
+                                    onChange={(e, value) => { setpageNumber(value) }} />
+                            </div>
+                        </span>
                     </>
                 ) : (
                     <>

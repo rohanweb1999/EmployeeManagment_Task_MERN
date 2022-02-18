@@ -1,6 +1,5 @@
 body {
   background-color: rgb(253, 253, 253) !important;
-  height: 100vh;
   overflow: hidden;
 }
 .box {
@@ -296,9 +295,9 @@ img {
   padding-left: 90%;
 }
 .pagination {
-  padding-left: 40%;
-  height: 100vh;
-  margin-top: 20%;
+  justify-content: center;
+  margin-top: 10px;
+  display: flex;
 }
 .DropDownMenu {
   display: flex;

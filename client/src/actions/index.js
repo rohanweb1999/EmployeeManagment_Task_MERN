@@ -13,10 +13,10 @@ toast.configure()
 
 
 //******************************* */ Actions start *******************************************//
-export const fetchData = (pageNumber, selectOption, searchUser) => {
+export const fetchData = (pageNumber, selectOption, searchUser, limit) => {
     return (
         (dispatch) => {
-            Axios.get(`/getUser/?Page=${pageNumber}&Sort=${selectOption}&Request=${searchUser}`)
+            Axios.get(`/getUser/?Page=${pageNumber}&Sort=${selectOption}&Request=${searchUser}&limitData=${limit}`)
                 .then((res) => {
                     const data = res.data
                     dispatch({ type: GET_DATA, payload: data })
@@ -173,27 +173,25 @@ export const fileUpload = (files) => {
                     console.log("res.data", res.data);
                     const msg = res.data.msg
                     const unsupportfile = res.data.unSupportedFiles
-                    console.log("unsupportfile", unsupportfile);
                     toast.success(msg, { position: toast.POSITION.TOP_CENTER, autoClose: 2000 });
                     if (msg) {
-                        dispatch({ type: LOADER, paylaod: res.data })
+                        dispatch({ type: LOADER })
                     }
                     if (unsupportfile.length !== 0) {
-                        alert(`${unsupportfile} files are not uploaded`)
+                        toast.error(`${unsupportfile} files are not uploaded`, { position: toast.POSITION.TOP_CENTER, autoClose: 3000 });
                     }
                 })
                 .catch(err => {
                     dispatch({ type: LOADER })
-
                     toast.error("File upload failed", { position: toast.POSITION.TOP_CENTER, autoClose: 2000 })
                 });
         }
     )
 }
-export const fetchFilesUsers = (pageNumber) => {
+export const fetchFilesUsers = (pageNumber, limit) => {
     return (
         (dispatch) => {
-            Axios.get(`/fetchFiles/?Page=${pageNumber}`)
+            Axios.get(`/fetchFiles/?Page=${pageNumber}&&limitFiles=${limit}`)
                 .then(res => {
                     dispatch({ type: FETCH_FILES, payload: res.data })
                 })

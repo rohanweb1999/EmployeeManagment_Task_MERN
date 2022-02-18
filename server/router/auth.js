@@ -63,8 +63,8 @@ router.get("/getcities/:stateId", async (req, res) => {
 router.get('/getUser', authenticate, async (req, res) => {
     try {
 
-        let { Page, Sort, Request } = req.query;
-        let limit = 2;
+        let { Page, Sort, Request, limitData } = req.query;
+        let limit = parseInt(limitData)
         let skip = (Page - 1) * limit;
         const loginAuthenticateUser = req.authenticateUser
         let loginstate = true
@@ -372,8 +372,8 @@ router.post('/upload-files', authenticate, upload.array('multi-files'), async (r
 router.get('/fetchFiles', authenticate, async (req, res) => {
 
     try {
-        let { Page } = req.query;
-        let limit = 5
+        let { Page, limitFiles } = req.query;
+        let limit = parseInt(limitFiles)
         let skip = (Page - 1) * limit
         const totalFiles = req.authenticateUser.Files;
         const loginAuthenticateUser = req.authenticateUser
